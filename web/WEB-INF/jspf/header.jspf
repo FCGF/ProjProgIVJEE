@@ -16,7 +16,7 @@
 
                         </form>-->
                         
-                        <a href="/mvc?cmd=BuildModelSampleCmd" class="navbar-brand">
+                        <a href="/progIV/mvc?cmd=BuildModelSampleCmd" class="navbar-brand">
                             <img alt="PetShopJS" src="/assets/images/basic/logo.png" width="40">
                         </a>
                     </div>
