@@ -49,7 +49,7 @@ public class AuthenticationControllerServlet extends HttpServlet {
                 //session.setAttribute("usercompanyid", Long.toString(user.));
 
                 //logservice
-                request.getRequestDispatcher("mvc?cmd=BuildModelSampleCmd").forward(request, response);
+                request.getRequestDispatcher("mvc?cmd=BuildMainMenuCmd").forward(request, response);
             } else {
                 //logservice
                 request.setAttribute("msg", "Credenciais inválidos ou usuario bloqueado!");

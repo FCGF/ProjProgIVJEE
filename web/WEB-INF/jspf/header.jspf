@@ -1,0 +1,53 @@
+<%-- any content can be specified here e.g.: --%>
+<%@ page pageEncoding="UTF-8" %>
+<div class="header-wrap">
+    <header id="header-main">
+        <div class="container">
+            <div class="navbar yamm navbar-default">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <!--<form id="formMainMenu" name="formMainMenu" method="POST" action="mvc?cmd=BuildMainMenuCmd">
+                            <input type="submit" class="hidden" id="submitBtn" name="submitBtn" required="required"/>
+
+                        </form>-->
+                        
+                        <a href="/mvc?cmd=BuildModelSampleCmd" class="navbar-brand">
+                            <img alt="PetShopJS" src="/assets/images/basic/logo.png" width="40">
+                        </a>
+                    </div>
+
+                    <div class="header-x pull-right">
+                        <div class="s-search">
+                            <div class="ss-trigger">
+                                <i class="icon-search2"></i>
+                            </div>
+                            <div class="ss-content">
+                                <span class="ss-close icon-cross2"></span>
+                                <div class="ssc-inner">
+                                    <form>
+                                        <input type="text" placeholder="Buscar...">
+                                        <button type="submit"><i class="icon-search2"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="navbar-collapse-1" class="navbar-collapse collapse navbar-right">
+                        <ul class="nav navbar-nav">
+                            <li>@Html.ActionLink("Sobre", "About", "Home", null, new { @class = "page-scroll" })</li>
+                            <li>@Html.ActionLink("Contato", "Contact", "Home", null, new { @class = "page-scroll" })</li>
+
+                        </ul>
+                        @Html.Partial("_LoginPartial")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
