@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Exe01">
+        <meta name="author" content="Fernando Garcia">
+        <link rel="icon" href="assets/icons/qb-icon.png">
+        <title>Exercicio01 - Fernando Garcia</title>
+        <!-- Bootstrap -->
+        <link href="assets/core/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap theme -->
+        <link href="assets/core/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css" rel="stylesheet"> 
+    </head>
+    <body>
+        <div id="main" class="container-fluid">
+            <h4 class="page-header">Cadastro de tarefas</h4>
+            <form id="formAddNew" name="formAddNew" method="POST" action="show">
+                <input type="hidden" id="cmd" name="cmd" value="adicionar">
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="nameInput">Nome:</label>
+                        <input type="text" class="form-control" id="nameInput" name="nameInput" required="required" placeholder="Digite o nome da tarefa" maxlength="100">
+                        <span id="nameInputCount" class="label label-warning">100 restantes!</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="comboProjeto">Projeto:</label>
+                        <SELECT id="comboProjeto" name="comboProjeto" size="1" class="form-control">
+                            <option value="1">Projeto 1</option> 
+                            <option value="2">Projeto 2</option>
+                            <option value="3">Projeto 3</option>
+                        </SELECT>                   
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="comboPacote">Pacote:</label>
+                        <SELECT id="comboPacote" name="comboPacote" size="1" class="form-control">
+                            <option value="1">Pacote 1</option> 
+                            <option value="2">Pacote 2</option>
+                            <option value="3">Pacote 3</option>
+                        </SELECT>                   
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="comboUsuario">Usuario:</label>
+                        <SELECT id="comboUsuario" name="comboUsuario" size="1" class="form-control">
+                            <option value="1">Usuario 1</option> 
+                            <option value="2">Usuario 2</option>
+                            <option value="3">Usuario 3</option>
+                        </SELECT>                   
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="comboStatus">Status:</label>
+                        <SELECT id="comboStatus" name="comboStatus" size="1" class="form-control">
+                            <option value="1">Planejada</option> 
+                            <option value="2">Em Andamento</option>
+                            <option value="3">Finalizada</option>
+                            <option value="4">Cancelada</option>
+                            <option value="5">Parada</option>
+                            <option value="6">Esperando por</option>
+                        </SELECT>                   
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        <label for="trabalhoEstimadoInput">Trabalho estimado:</label> 
+                        <input type="number" class="form-control" id="trabalhoEstimadoInput" name="trabalhoEstimadoInput" required="required" min ="0"
+                               placeholder="Digite o trabalho estimado" data-validation="number" data-validation-allowing="float" value='0.00' step="0.1">
+                    </div>                    
+                    <div class="form-group col-md-2">
+                        <label for="trabalhoRealizadoInput">Trabalho realizado:</label>
+                        <input type="number" class="form-control" id="trabalhoRealizadoInput" name="trabalhoRealizadoInput" required="required" min="0"
+                               placeholder="Digite o trabalho realizado" data-validation="number" data-validation-allowing="float" value='0.00' step="0.1"/>
+                    </div>                    
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-2">
+                        <label for="dataInicioInput">Data inicio:</label> 
+                        <input type="date" class="form-control" id="dataInicioInput" name="dataInicioInput" required="required" autocomplete="on"/>
+                    </div>                    
+                    <div class="form-group col-md-2">
+                        <label for="dataTerminoInput">Data termino:</label>
+                        <input type="date" class="form-control" id="dataTerminoInput" name="dataTerminoInput" required="required" autocomplete="on"/>
+                    </div>                    
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label for="descricaoInput">Descrição da tarefa:</label>
+                        <textarea id="descricaoInput" class="form-control col-xs-12" name="descricaoInput" required="required" maxlength="255" rows="5"></textarea>
+                        <span id="descricaoInputCount" class="label label-warning">255 restantes!</span>
+                    </div>
+                </div>
+
+                <div class="row col-md-6">
+                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Salvar">Salvar</button>
+                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Limpar">Limpar</button>
+                </div>
+            </form>
+
+        </div>
+
+        <!-- CORE JAVASCRIPT LYBRARIES...
+        ================================================== -->
+        <script type="text/javascript" src="assets/core/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="assets/core/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script> 
+        <script type="text/javascript" src="teste.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                String.prototype.isEmpty = function () {
+                    return (this.length === 0 || !this.trim());
+                };
+
+                var verificaDatas = function () {
+                    var dataInicio = $("#dataInicioInput").val();
+                    var dataFim = $("#dataTerminoInput").val();
+                    if (dataInicio > dataFim) {
+                        $("#dataTerminoInput").val(dataInicio);
+                        alert('A data inicial nao  pode ser maior que a data final.');
+                    }
+                };
+
+                $("#nameInput").keyup(function () {
+                    var currentSize = $(this).val().length;
+                    var maxSize = 100;
+
+                    var remainingSize = maxSize - currentSize;
+
+                    $("#nameInputCount").text(remainingSize + " restantes!");
+                });
+
+                $("#descricaoInput").keyup(function () {
+                    var currentSize = $(this).val().length;
+                    var maxSize = 255;
+
+                    var remainingSize = maxSize - currentSize;
+
+                    $("#descricaoInputCount").text(remainingSize + " restantes!");
+                });
+
+                $("#dataInicioInput").focusout(function () {
+                    if ($("#dataTerminoInput").val().isEmpty()) {
+                        $("#dataTerminoInput").val($("#dataInicioInput").val());
+                    } else {
+                        verificaDatas();
+                    }
+                });
+
+                $("#dataTerminoInput").focusout(function () {
+                    if ($("#dataInicioInput").val().isEmpty()) {
+                        $("#dataInicioInput").val($("#dataTerminoInput").val());
+                    } else {
+                        verificaDatas();
+                    }
+                });
+
+                $('[data-toggle="tooltip"]').tooltip();
+
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,94 @@
+{
+    "id": "1",
+    "name": "Processo de aprovação de documento",
+    "namedSteps": [
+        {
+            "id": "0",
+            "name": "Solicitar criação do documento",
+            "startStep": true,
+            "endStep": false,
+            "nextSteps": [
+                {
+                    "id": "1",
+                    "name": "Iniciar processo"
+                }
+            ]
+        },
+        {
+            "id": "1",
+            "name": "Criar documento",
+            "startStep": false,
+            "endStep": false,
+            "nextSteps": [
+                {
+                    "id": "3",
+                    "name": "Aprovar"
+                },
+                {
+                    "id": "2",
+                    "name": "Revisar solicitação"
+                }
+            ]
+        },
+        {
+            "id": "2",
+            "name": "Revisar solicitação",
+            "startStep": false,
+            "endStep": false,
+            "nextSteps": [
+                {
+                    "id": "3",
+                    "name": "Aprovar documento"
+                },
+                {
+                    "id": "999",
+                    "name": "Cancelar solicitação"
+                }
+            ]
+        },
+        {
+            "id": "3",
+            "name": "Aprovar documento",
+            "startStep": false,
+            "endStep": false,
+            "nextStepsId": "5;4",
+            "nextStepNames": "Aprovar documento;Revisar documento"
+        },
+        
+        {
+            "id": "4",
+            "name": "Revisar documento",
+            "startStep": false,
+            "endStep": false,
+            "nextStepsId": "2;3",
+            "nextStepNames": "Revisar solicitação;Revisar documento"
+        },        
+        
+        {
+            "id": "5",
+            "name": "Publicar documento",
+            "startStep": false,
+            "endStep": false,
+            "nextStepsId": "999",
+            "nextStepNames": "Revisão publicada"
+        },
+
+        
+        {
+            "id": "998",
+            "name": "Fim do processo por cancelamento",
+            "startStep": false,
+            "endStep": true,
+            "nextStepsId": "",
+            "nextStepNames": ""
+        },
+        {
+            "id": "999",
+            "name": "Fim do processo por sucesso",
+            "startStep": false,
+            "endStep": true,
+            "nextStepsId": "",
+            "nextStepNames": ""
+        }
+    ]
+}
