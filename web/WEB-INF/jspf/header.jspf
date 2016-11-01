@@ -1,16 +1,10 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="UTF-8" %>
-<!-- Bootstrap -->
-<link href="./assets/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap theme -->
-<link href="./assets/css/bootstrap-theme.min.css" rel="stylesheet">    
 
-<link href="./assets/css/bootstrap-social.css" rel="stylesheet"/>
-<link href="./assets/css/font-awesome.min.css" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css">
-<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-<link href="https://fonts.googleapis.com/css?family=Raleway:400,200,100,300,500,600,700,800,900" rel="stylesheet" type="text/css">
-<link href="https://fonts.googleapis.com/css?family=Dosis:400,200,300,500,600,700,800" rel="stylesheet" type="text/css">
+<!-- Bootstrap -->
+<link href="assets/core/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap theme -->
+<link href="assets/core/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" rel="stylesheet">   
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -33,11 +27,11 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administrative <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">User</a></li>
-                        <li><a href="#">Rule</a></li>           
+                        <li><a href="/progIV/mvc?cmd=UserCRUDCmd">User</a></li>
+                        <li><a href="/progIV/mvc?cmd=RuleCRUDCmd">Rule</a></li>           
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Product</a></li>
-                        <li><a href="#">Category</a></li>
+                        <li><a href="/progIV/mvc?cmd=ProductCRUDCmd">Product</a></li>
+                        <li><a href="/progIV/mvc?cmd=CategoryCRUDCmd">Category</a></li>
                     </ul>
                 </li>
             </ul>
@@ -55,8 +49,3 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
-
-<!-- JQuery and Bootstrap -->
-<script src="./assets/js/jquery-3.1.1.min.js"></script>
-<script src="./assets/js/bootstrap.min.js"></script>
-<script src="./assets/js/jquery.unobtrusive-ajax.min.js"></script>

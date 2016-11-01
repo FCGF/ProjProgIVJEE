@@ -54,7 +54,7 @@ public class CmdControllerServlet extends HttpServlet {
                     nextCmd = (String) method.invoke(theCmd, req, res);
                 } catch (NoSuchMethodException | SecurityException | InvocationTargetException ex) {
                     nextCmd = theCmd.execute(req, res);
-                    Logger.getLogger(CmdControllerServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(CmdControllerServlet.class.getName()).log(Level.SEVERE, "Method " + mtd + " not found!", ex);
                 }
             }
 
