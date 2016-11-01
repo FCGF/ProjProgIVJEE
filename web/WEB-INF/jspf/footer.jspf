@@ -3,6 +3,7 @@
 <h2>Footer</h2>
 
 <!-- JQuery and Bootstrap -->
-<script src="./assets/js/jquery-3.1.1.min.js"></script>
-<script src="./assets/js/bootstrap.min.js"></script>
-<script src="./assets/js/jquery.unobtrusive-ajax.min.js"></script>
+<script src="./assets/core/jquery-3.1.1.min.js"></script>
+<script src="./assets/core/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="./assets/core/jquery.unobtrusive-ajax.min.js"></script>
+<script src="./assets/core/bootbox.min.js"></script>

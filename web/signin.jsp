@@ -18,9 +18,9 @@
         <link rel="icon" href="assets/icons/qb-icon.png">
         <title>Log In</title>
          <!-- Bootstrap -->
-        <link href="assets/core/bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/core/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
         <!-- Bootstrap theme -->
-        <link href="assets/core/bootstrap-3.3.5-dist/css/bootstrap-theme.min.css" rel="stylesheet"> 
+        <link href="assets/core/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" rel="stylesheet"> 
     </head>
     <body style="background: #F7F7F7;">
         <div id="main" class="container-fluid">
@@ -47,8 +47,8 @@
             </form>
         </div>
 
-        <script type="text/javascript" src="assets/core/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="assets/core/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script> 
+        <script type="text/javascript" src="assets/core/jquery-3.1.1.min.js"></script>
+        <script type="text/javascript" src="assets/core/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script> 
 
     </body>
 </html>

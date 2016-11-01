@@ -22,7 +22,7 @@
                 <div class="col-md-10 col-md-offset-1">
                     <h2>${name}</h2>
                     <br/>
-                    <a href="#" class="btn btn-info modal-link" title="Create" data-action="Create">
+                    <a href="#" class="btn btn-info createButton" title="Create" data-action="Create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 
                     <form class="form-inline pull-right" id="searchForm">
@@ -55,14 +55,14 @@
                                     </c:forEach>
                                     <td>
                                         <span class="pull-right">
-                                            <a href="#" class="btn btn-primary modal-link" title="Edit" data-action="Edit" data-parameter="${fields.get("Id")}">
-                                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                                            <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
 
-                                            <a href="#" class="btn btn-success modal-link" title="Details" data-action="Details" data-parameter="${fields.get("Id")}">
-                                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span></a>
+                                            <a href="#" class="btn btn-success detailsButton" title="Details" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></a>
 
-                                            <a href="#" class="btn btn-danger modal-link" title="Delete" data-action="Delete" data-parameter="${fields.get("Id")}">
-                                                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
+                                            <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>
                                         </span>
                                     </td>
                                 </tr>
@@ -75,5 +75,20 @@
 
         <!-- FOOTER -->  
         <%@include file="/WEB-INF/jspf/footer.jspf"%>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".deleteButton").click(function () {
+                    var id = $(this).data("id");
+                    var name = $(this).data("name");
+
+                    bootbox.confirm("Are you sure you wish to delete the element " + id + " - " + name + "?", function (result) {
+                        if (result) {
+                            alert("Deletar");
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>
