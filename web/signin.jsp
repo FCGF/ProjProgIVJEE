@@ -34,13 +34,13 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4 col-md-offset-4">
-                        <label for="password">Senha:</label>
+                        <label for="password">Password:</label>
                         <input type="password" class="form-control" id="password" name="password" required="required" placeholder="Digite sua senha" maxlength="50"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-4 col-md-offset-4">
-                        <input type="submit" class="btn btn-primary" id="submitBtn" name="submitBtn" required="required"/>
+                        <input type="submit" class="btn btn-primary" id="submitBtn" name="submitBtn" required="required" value="Log In"/>
                         <p style="color: red;">${msg}</p> 
                     </div>
                 </div>

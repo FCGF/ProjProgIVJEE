@@ -45,7 +45,7 @@ public class AuthenticationControllerServlet extends HttpServlet {
                 HttpSession session = request.getSession(true);
                 session.setAttribute("userid", Long.toString(user.getId()));
                 session.setAttribute("username", user.getNome());
-                //session.setAttribute("userroleid", Long.toString(user.));
+                session.setAttribute("userroleid", Long.toString(user.getRule().getId()));
                 //session.setAttribute("usercompanyid", Long.toString(user.));
 
                 //logservice

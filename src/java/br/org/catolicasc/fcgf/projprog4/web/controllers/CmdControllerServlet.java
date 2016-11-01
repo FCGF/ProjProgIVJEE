@@ -2,6 +2,10 @@ package br.org.catolicasc.fcgf.projprog4.web.controllers;
 
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.annotation.WebInitParam;
@@ -33,10 +37,27 @@ public class CmdControllerServlet extends HttpServlet {
         res.setCharacterEncoding("UTF-8");
         try {
             final String cmd = this.readParameter(req, "cmd", getInitParameter("notFoundCmdCmd"));
+            final String mtd = req.getParameter("mtd");
+
             final String cmdPackage = getInitParameter("cmdAddressPackage");
             final Class theClass = Class.forName(cmdPackage + "." + cmd);
             final IWebCmd theCmd = (IWebCmd) theClass.newInstance();
-            final String nextCmd = theCmd.execute(req, res);
+
+            String nextCmd;
+
+            if (mtd == null || mtd.trim().isEmpty()) {
+                nextCmd = theCmd.execute(req, res);
+            } else {
+                final Method method;
+                try {
+                    method = theClass.getDeclaredMethod(mtd, new Class[]{HttpServletRequest.class, HttpServletResponse.class});
+                    nextCmd = (String) method.invoke(theCmd, req, res);
+                } catch (NoSuchMethodException | SecurityException | InvocationTargetException ex) {
+                    nextCmd = theCmd.execute(req, res);
+                    Logger.getLogger(CmdControllerServlet.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
             req.getRequestDispatcher(nextCmd).forward(req, res);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             final String cmd = this.readParameter(req, "cmd", "Não submetido ao controlador!");
