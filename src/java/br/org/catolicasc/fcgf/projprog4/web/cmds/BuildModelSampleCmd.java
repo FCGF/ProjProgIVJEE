@@ -5,13 +5,13 @@ import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.List;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.catolica.prog4.persistencia.entities.Rule;
 import org.catolica.prog4.persistencia.daos.IRuleDAO;
 import org.catolica.prog4.persistencia.daos.RuleDAO;
+import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
 /**
  *
@@ -30,7 +30,7 @@ public class BuildModelSampleCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     private List<Rule> findAllRules() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
 
         IRuleDAO dao = new RuleDAO(factory);
 

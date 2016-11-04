@@ -7,3 +7,40 @@
 <script src="./assets/core/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 <script src="./assets/core/jquery.unobtrusive-ajax.min.js"></script>
 <script src="./assets/core/bootbox.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".createButton").click(function () {
+            alert("Create");
+            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=create";
+        });
+
+        $(".listButton").click(function () {
+            alert("List");
+            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=list";
+        });
+
+        $(".editButton").click(function () {
+            alert("Update");
+            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=update";
+        });
+
+        $(".detailsButton").click(function () {
+            alert("Detail");
+            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=detail";
+        });
+
+
+        $(".deleteButton").click(function () {
+            var id = $(this).data("id");
+            var name = $(this).data("name");
+            var link = "prog4/mvc?cmd=${cmd}&mtd=delete&id=" + id;
+            bootbox.confirm("Are you sure you wish to delete the element " + id + " - " + name + "?", function (result) {
+                if (result) {
+                    window.location.href = link;
+                    alert("Deletar");
+                }
+            }
+            });
+        });
+    });
+</script>

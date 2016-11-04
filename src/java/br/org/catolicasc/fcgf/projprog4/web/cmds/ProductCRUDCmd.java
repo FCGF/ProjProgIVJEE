@@ -8,12 +8,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.catolica.prog4.persistencia.daos.ProductDAO;
 import org.catolica.prog4.persistencia.entities.Product;
+import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
 /**
  *
@@ -65,7 +65,7 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     private List<Product> findAllProducts() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
 
         ProductDAO dao = new ProductDAO(factory);
 

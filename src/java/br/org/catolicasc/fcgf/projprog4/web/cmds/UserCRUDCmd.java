@@ -8,12 +8,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.catolica.prog4.persistencia.daos.UserDAO;
 import org.catolica.prog4.persistencia.entities.User;
+import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
 /**
  *
@@ -52,6 +52,13 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        final String receivedId = request.getParameter("id");
+        if (receivedId == null || receivedId.isEmpty()) {
+            request.setAttribute("msg", "Id não recebido.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+        }
         return list(request, response);
     }
 
@@ -64,7 +71,7 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     private List<User> findAllUsers() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
 
         UserDAO dao = new UserDAO(factory);
 

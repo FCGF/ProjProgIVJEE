@@ -6,13 +6,13 @@ import org.catolica.prog4.persistencia.entities.User;
 import java.io.IOException;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
 /**
  *
@@ -63,8 +63,7 @@ public class AuthenticationControllerServlet extends HttpServlet {
     }
 
     private User findUser(String email, String password) {
-        final String PERSISTENCE_UNIT_NAME = "PersistenciaPU";
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
         UserDAO dao = new UserDAO(factory);
         User user;
         try {
