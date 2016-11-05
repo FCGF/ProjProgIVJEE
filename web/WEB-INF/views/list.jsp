@@ -25,50 +25,56 @@
                     <a href="#" class="btn btn-info createButton" title="Create" data-action="Create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 
-                    <form class="form-inline pull-right" id="searchForm">
+                    <div class="form-inline pull-right" id="searchForm">
                         <div class="form-group">
                             <label for="search" class="sr-only">Search</label>
-                            <input type="text" class="form-control" name="search" placeholder="Search"/>
+                            <input type="text" class="form-control search"　id="search" name="search" placeholder="Search"/>
                         </div>
-                        <button type="button" class="btn btn-warning" id="searchButton" title="Search">
+                        <button type="button" class="btn btn-warning searchButton" id="searchButton" title="Search">
                             <span class="glyphicon glyphicon-search"></span></button>
-                    </form>
+                    </div>
                 </div>
             </div>
 
             <div id="lista" class="row">
                 <div class="col-md-10 col-md-offset-1">
-                    <table id="dataGrid" class="table table-striped table-responsive table-hover">
-                        <thead>
-                            <tr>
-                                <c:forEach var="field" items="${objects.get(0).entrySet()}">
-                                    <td>${field.getKey()}</td>
-                                </c:forEach>
-                                <td> </td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="fields" items="${objects}">
+                    <c:if test="${empty objects}">
+                        <h3>No results found!</h3>
+                    </c:if>
+                    
+                    <c:if test="${not empty objects}">
+                        <table id="dataGrid" class="table table-striped table-responsive table-hover">
+                            <thead>
                                 <tr>
-                                    <c:forEach var="field" items="${fields.entrySet()}">
-                                        <td><c:out value="${field.getValue()}"/></td>
+                                    <c:forEach var="field" items="${objects.get(0).entrySet()}">
+                                        <td>${field.getKey()}</td>
                                     </c:forEach>
-                                    <td>
-                                        <span class="pull-right">
-                                            <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
-                                                <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
-
-                                            <a href="#" class="btn btn-success detailsButton" title="Details" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
-                                                <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></a>
-
-                                            <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
-                                                <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>
-                                        </span>
-                                    </td>
+                                    <td> </td>
                                 </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <c:forEach var="fields" items="${objects}">
+                                    <tr>
+                                        <c:forEach var="field" items="${fields.entrySet()}">
+                                            <td><c:out value="${field.getValue()}"/></td>
+                                        </c:forEach>
+                                        <td>
+                                            <span class="pull-right">
+                                                <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
+
+                                                <a href="#" class="btn btn-success detailsButton" title="Details" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></a>
+
+                                                <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                    <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -76,19 +82,5 @@
         <!-- FOOTER -->  
         <%@include file="/WEB-INF/jspf/footer.jspf"%>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $(".deleteButton").click(function () {
-                    var id = $(this).data("id");
-                    var name = $(this).data("name");
-
-                    bootbox.confirm("Are you sure you wish to delete the element " + id + " - " + name + "?", function (result) {
-                        if (result) {
-                            alert("Deletar");
-                        }
-                    });
-                });
-            });
-        </script>
     </body>
 </html>

@@ -26,8 +26,8 @@
                 </div>
             </c:forEach>
             <div class="row col-md-10 col-md-offset-1 pull-left">
-                <a href="#" class="btn btn-warning listButton" title="Details" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></a>
+                <a href="#" class="btn btn-success listButton" title="List" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                    <span class="glyphicon glyphicon-list" aria-hidden="true"></a>
 
                 <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
@@ -42,6 +42,6 @@
         <!-- FOOTER -->  
         <%@include file="/WEB-INF/jspf/footer.jspf"%>
 
-        >
+        
     </body>
 </html>

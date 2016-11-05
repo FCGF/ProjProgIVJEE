@@ -1,46 +1,60 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="UTF-8" %>
-<h2>Footer</h2>
+<h4>Footer</h4>
 
 <!-- JQuery and Bootstrap -->
 <script src="./assets/core/jquery-3.1.1.min.js"></script>
 <script src="./assets/core/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 <script src="./assets/core/jquery.unobtrusive-ajax.min.js"></script>
 <script src="./assets/core/bootbox.min.js"></script>
+<script src="./assets/core/toastr.min.js"></script>
 <script type="text/javascript">
+    function isEmpty(str) {
+        return (!str || 0 === str.length);
+    }
+
     $(document).ready(function () {
+
+        if (!isEmpty("${msg}")) {
+            toastr['error']("${msg}");
+        }
+
         $(".createButton").click(function () {
             alert("Create");
-            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=create";
+            window.location.href = "mvc?cmd=${cmd}&mtd=create";
         });
 
         $(".listButton").click(function () {
-            alert("List");
-            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=list";
+            window.location.href = "mvc?cmd=${cmd}&mtd=list";
         });
 
         $(".editButton").click(function () {
-            alert("Update");
-            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=update";
+            var id = $(this).data("id");
+            alert("Update " + id);
+            window.location.href = "mvc?cmd=${cmd}&mtd=update&id=" + id;
         });
 
         $(".detailsButton").click(function () {
-            alert("Detail");
-            window.location.href = "prog4/mvc?cmd=${cmd}&mtd=detail";
+            var id = $(this).data("id");
+            window.location.href = "mvc?cmd=${cmd}&mtd=detail&id=" + id;
         });
-
 
         $(".deleteButton").click(function () {
             var id = $(this).data("id");
             var name = $(this).data("name");
-            var link = "prog4/mvc?cmd=${cmd}&mtd=delete&id=" + id;
+            var link = "mvc?cmd=${cmd}&mtd=delete&id=" + id;
             bootbox.confirm("Are you sure you wish to delete the element " + id + " - " + name + "?", function (result) {
                 if (result) {
-                    window.location.href = link;
                     alert("Deletar");
+                    window.location.href = link;
                 }
-            }
             });
         });
+
+        $(".searchButton").click(function () {
+            var srch = $('input[name="search"]').val();
+            window.location.href = "mvc?cmd=${cmd}&mtd=list&srch=" + srch;
+        });
+
     });
 </script>

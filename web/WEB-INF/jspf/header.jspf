@@ -5,6 +5,7 @@
 <link href="assets/core/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- Bootstrap theme -->
 <link href="assets/core/bootstrap-3.3.7-dist/css/bootstrap-theme.min.css" rel="stylesheet">   
+<link href="assets/core/toastr.min.css" rel="stylesheet">   
 
 <nav class="navbar navbar-default">
     <div class="container-fluid">

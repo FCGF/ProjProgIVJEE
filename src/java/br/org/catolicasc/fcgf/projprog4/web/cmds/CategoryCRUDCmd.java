@@ -1,6 +1,7 @@
 package br.org.catolicasc.fcgf.projprog4.web.cmds;
 
 import br.org.catolicasc.fcgf.projprog4.web.abstracts.AbstractWebCmd;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.ParseHelper;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,16 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Category> categories = findAllCategories();
+        setCmdName(request);
+
+        String searchFor = request.getParameter("srch");
+        List<Category> categories;
+
+        if (searchFor == null || searchFor.isEmpty()) {
+            categories = findAllCategories();
+        } else {
+            categories = findCategories(searchFor.toLowerCase());
+        }
 
         List<Map<String, Object>> objects = new ArrayList<>();
         categories.stream().map((u) -> {
@@ -46,18 +56,50 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        return list(request, response);
+        setCmdName(request);
+
+        final String receivedId = request.getParameter("id");
+        final String link;
+
+        if (receivedId == null || receivedId.isEmpty()) {
+            request.setAttribute("msg", "Id not received.");
+            link = list(request, response);
+        } else {
+            Long id = Long.parseLong(receivedId);
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            CategoryDAO dao = new CategoryDAO(factory);
+            Category category = dao.findCategory(id);
+
+            if (category == null) {
+                request.setAttribute("msg", "Category not found.");
+                link = list(request, response);
+            } else {
+                Map<String, Object> fields = new LinkedHashMap<>(6);
+                fields.put("Id", category.getId());
+                fields.put("Nome", category.getNome());
+
+                request.setAttribute("fields", fields);
+                request.setAttribute("name", "Rules");
+
+                link = "/WEB-INF/views/detail.jsp";
+            }
+        }
+
+        return link;
     }
 
     public String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
     public String delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
@@ -67,5 +109,22 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
         CategoryDAO dao = new CategoryDAO(factory);
 
         return dao.findAll();
+    }
+
+    private List<Category> findCategories(String keyword) {
+        EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+
+        CategoryDAO dao = new CategoryDAO(factory);
+
+        List<Category> categories = dao.findAll();
+
+        List<Category> filteredCategories = new ArrayList<>();
+
+        categories.stream().filter((c) -> ((ParseHelper.tryParseLong(keyword) && Long.parseLong(keyword) == c.getId())
+                || (c.getNome().toLowerCase().contains(keyword)))).forEachOrdered((c) -> {
+                    filteredCategories.add(c);
+        });
+
+        return filteredCategories;
     }
 }

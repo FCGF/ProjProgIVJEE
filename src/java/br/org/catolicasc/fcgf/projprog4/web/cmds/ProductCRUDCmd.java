@@ -1,6 +1,7 @@
 package br.org.catolicasc.fcgf.projprog4.web.cmds;
 
 import br.org.catolicasc.fcgf.projprog4.web.abstracts.AbstractWebCmd;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.ParseHelper;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,16 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Product> products = findAllProducts();
+        setCmdName(request);
+
+        String searchFor = request.getParameter("srch");
+        List<Product> products;
+
+        if (searchFor == null || searchFor.isEmpty()) {
+            products = findAllProducts();
+        } else {
+            products = findProducts(searchFor.toLowerCase());
+        }
 
         List<Map<String, Object>> objects = new ArrayList<>();
         products.stream().map((u) -> {
@@ -41,7 +51,7 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
         }).forEach((fields) -> {
             objects.add(fields);
         });
-        
+
         request.setAttribute("objects", objects);
         request.setAttribute("name", "Products");
 
@@ -49,18 +59,53 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        return list(request, response);
+        setCmdName(request);
+
+        final String receivedId = request.getParameter("id");
+        final String link;
+
+        if (receivedId == null || receivedId.isEmpty()) {
+            request.setAttribute("msg", "Id not received.");
+            link = list(request, response);
+        } else {
+            Long id = Long.parseLong(receivedId);
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            ProductDAO dao = new ProductDAO(factory);
+            Product product = dao.findProduct(id);
+
+            if (product == null) {
+                request.setAttribute("msg", "Product not found.");
+                link = list(request, response);
+            } else {
+                Map<String, Object> fields = new LinkedHashMap<>(6);
+                fields.put("Id", product.getId());
+                fields.put("Nome", product.getNome());
+                fields.put("Description", product.getDescription());
+                fields.put("Price", product.getPrice());
+                fields.put("Category", product.getCategory().getNome());
+
+                request.setAttribute("fields", fields);
+                request.setAttribute("name", "Rules");
+
+                link = "/WEB-INF/views/detail.jsp";
+            }
+        }
+
+        return link;
     }
 
     public String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
     public String delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
@@ -70,5 +115,25 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
         ProductDAO dao = new ProductDAO(factory);
 
         return dao.findAll();
+    }
+
+    private List<Product> findProducts(String keyword) {
+        EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+
+        ProductDAO dao = new ProductDAO(factory);
+
+        List<Product> products = dao.findAll();
+
+        List<Product> filteredProducts = new ArrayList<>();
+
+        products.stream().filter((p) -> ((ParseHelper.tryParseLong(keyword) && Long.parseLong(keyword) == p.getId())
+                || (p.getNome().toLowerCase().contains(keyword))
+                || (p.getDescription().toLowerCase().contains(keyword)
+                        || (ParseHelper.tryParseDouble(keyword) && Double.parseDouble(keyword) == p.getPrice())
+                        || (p.getCategory().getNome().toLowerCase().contains(keyword))))).forEachOrdered((p) -> {
+                            filteredProducts.add(p);
+        });
+
+        return filteredProducts;
     }
 }

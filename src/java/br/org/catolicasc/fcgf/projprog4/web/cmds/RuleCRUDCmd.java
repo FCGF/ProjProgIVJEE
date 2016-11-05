@@ -1,6 +1,7 @@
 package br.org.catolicasc.fcgf.projprog4.web.cmds;
 
 import br.org.catolicasc.fcgf.projprog4.web.abstracts.AbstractWebCmd;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.ParseHelper;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +28,16 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String list(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<Rule> rules = findAllRules();
+        setCmdName(request);
+
+        String searchFor = request.getParameter("srch");
+        List<Rule> rules;
+
+        if (searchFor == null || searchFor.isEmpty()) {
+            rules = findAllRules();
+        } else {
+            rules = findRules(searchFor.toLowerCase());
+        }
 
         List<Map<String, Object>> objects = new ArrayList<>();
         rules.stream().map((u) -> {
@@ -46,18 +56,50 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        return list(request, response);
+        setCmdName(request);
+
+        final String receivedId = request.getParameter("id");
+        final String link;
+
+        if (receivedId == null || receivedId.isEmpty()) {
+            request.setAttribute("msg", "Id not received.");
+            link = list(request, response);
+        } else {
+            Long id = Long.parseLong(receivedId);
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            RuleDAO dao = new RuleDAO(factory);
+            Rule rule = dao.findRule(id);
+
+            if (rule == null) {
+                request.setAttribute("msg", "Rule not found.");
+                link = list(request, response);
+            } else {
+                Map<String, Object> fields = new LinkedHashMap<>(6);
+                fields.put("Id", rule.getId());
+                fields.put("Nome", rule.getNome());
+
+                request.setAttribute("fields", fields);
+                request.setAttribute("name", "Rules");
+
+                link = "/WEB-INF/views/detail.jsp";
+            }
+        }
+
+        return link;
     }
 
     public String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
     public String delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        setCmdName(request);
         return list(request, response);
     }
 
@@ -67,5 +109,22 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
         RuleDAO dao = new RuleDAO(factory);
 
         return dao.findAll();
+    }
+
+    private List<Rule> findRules(String keyword) {
+        EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+
+        RuleDAO dao = new RuleDAO(factory);
+
+        List<Rule> rules = dao.findAll();
+
+        List<Rule> filteredRules = new ArrayList<>();
+
+        rules.stream().filter((r) -> ((ParseHelper.tryParseLong(keyword) && Long.parseLong(keyword) == r.getId())
+                || (r.getNome().toLowerCase().contains(keyword)))).forEachOrdered((r) -> {
+                    filteredRules.add(r);
+        });
+
+        return filteredRules;
     }
 }

@@ -24,4 +24,9 @@ public abstract class AbstractWebCmd {
         return value;
     }
 
+    protected void setCmdName(HttpServletRequest request) {
+        final String clazz = this.getClass().getSimpleName();
+        request.setAttribute("cmd", clazz);
+    }
+
 }
