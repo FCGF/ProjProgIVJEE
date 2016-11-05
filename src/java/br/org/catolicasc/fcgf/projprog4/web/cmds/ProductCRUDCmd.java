@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.catolica.prog4.persistencia.daos.ProductDAO;
+import org.catolica.prog4.persistencia.daos.exceptions.NonexistentEntityException;
 import org.catolica.prog4.persistencia.entities.Product;
 import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
@@ -106,6 +107,24 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
     public String delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter("id");
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute("msg", "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            ProductDAO dao = new ProductDAO(factory);
+
+            try {
+                dao.destroy(id);
+                request.setAttribute("msg", "Product deleted successfully.");
+            } catch (NonexistentEntityException ex) {
+                request.setAttribute("msg", "Product not found.");
+            }
+        }
         return list(request, response);
     }
 

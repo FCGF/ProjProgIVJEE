@@ -13,6 +13,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.catolica.prog4.persistencia.daos.RuleDAO;
+import org.catolica.prog4.persistencia.daos.exceptions.IllegalOrphanException;
+import org.catolica.prog4.persistencia.daos.exceptions.NonexistentEntityException;
 import org.catolica.prog4.persistencia.entities.Rule;
 import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
@@ -100,6 +102,26 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
     public String delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter("id");
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute("msg", "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            RuleDAO dao = new RuleDAO(factory);
+
+            try {
+                dao.destroy(id);
+                request.setAttribute("msg", "Rule deleted successfully.");
+            } catch (NonexistentEntityException ex) {
+                request.setAttribute("msg", "Rule not found.");
+            } catch (IllegalOrphanException ex) {
+                request.setAttribute("msg", "User(s) with this Rule found. Please delete or edit them first.");
+            }
+        }
         return list(request, response);
     }
 
@@ -122,7 +144,7 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
         rules.stream().filter((r) -> ((ParseHelper.tryParseLong(keyword) && Long.parseLong(keyword) == r.getId())
                 || (r.getNome().toLowerCase().contains(keyword)))).forEachOrdered((r) -> {
-                    filteredRules.add(r);
+            filteredRules.add(r);
         });
 
         return filteredRules;

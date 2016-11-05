@@ -13,6 +13,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.catolica.prog4.persistencia.daos.CategoryDAO;
+import org.catolica.prog4.persistencia.daos.exceptions.IllegalOrphanException;
+import org.catolica.prog4.persistencia.daos.exceptions.NonexistentEntityException;
 import org.catolica.prog4.persistencia.entities.Category;
 import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
@@ -100,6 +102,26 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
     public String delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter("id");
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute("msg", "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            CategoryDAO dao = new CategoryDAO(factory);
+
+            try {
+                dao.destroy(id);
+                request.setAttribute("msg", "Category deleted successfully.");
+            } catch (NonexistentEntityException ex) {
+                request.setAttribute("msg", "Category not found.");
+            } catch (IllegalOrphanException ex) {
+                request.setAttribute("msg", "Product(s) with this Category found. Please delete or edit them first.");
+            }
+        }
         return list(request, response);
     }
 

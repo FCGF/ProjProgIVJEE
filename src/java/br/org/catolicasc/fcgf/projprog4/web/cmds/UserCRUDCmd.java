@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.catolica.prog4.persistencia.daos.UserDAO;
+import org.catolica.prog4.persistencia.daos.exceptions.NonexistentEntityException;
 import org.catolica.prog4.persistencia.entities.User;
 import org.catolica.prog4.persistencia.helpers.EntityManagerFactoryManager;
 
@@ -68,7 +69,7 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
         final String receivedId = request.getParameter("id");
         final String link;
 
-        if (receivedId == null || receivedId.isEmpty()) {
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
             request.setAttribute("msg", "Id not received.");
             link = list(request, response);
         } else {
@@ -104,6 +105,24 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
     public String delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter("id");
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute("msg", "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            UserDAO dao = new UserDAO(factory);
+
+            try {
+                dao.destroy(id);
+                request.setAttribute("msg", "User deleted successfully.");
+            } catch (NonexistentEntityException ex) {
+                request.setAttribute("msg", "User not found.");
+            }
+        }
         return list(request, response);
     }
 
@@ -127,8 +146,8 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
         users.stream().filter((u) -> ((ParseHelper.tryParseLong(keyword) && Long.parseLong(keyword) == u.getId())
                 || (u.getNome().toLowerCase().contains(keyword))
                 || (u.getEmail().toLowerCase().contains(keyword)
-                        || (u.getRule().getNome().toLowerCase().contains(keyword))))).forEachOrdered((u) -> {
-                            filteredUsers.add(u);
+                || (u.getRule().getNome().toLowerCase().contains(keyword))))).forEachOrdered((u) -> {
+            filteredUsers.add(u);
         });
 
         return filteredUsers;
