@@ -15,12 +15,15 @@
 
     $(document).ready(function () {
 
+        if (!isEmpty("${error}")) {
+            toastr['error']("${error}");
+        }
+        
         if (!isEmpty("${msg}")) {
-            toastr['error']("${msg}");
+            toastr['success']("${msg}");
         }
 
         $(".createButton").click(function () {
-            alert("Create");
             window.location.href = "mvc?cmd=${cmd}&mtd=create";
         });
 
@@ -31,21 +34,20 @@
         $(".editButton").click(function () {
             var id = $(this).data("id");
             alert("Update " + id);
-            window.location.href = "mvc?cmd=${cmd}&mtd=update&id=" + id;
+            window.location.href = "mvc?cmd=${cmd}&mtd=update&Id=" + id;
         });
 
         $(".detailsButton").click(function () {
             var id = $(this).data("id");
-            window.location.href = "mvc?cmd=${cmd}&mtd=detail&id=" + id;
+            window.location.href = "mvc?cmd=${cmd}&mtd=detail&Id=" + id;
         });
 
         $(".deleteButton").click(function () {
             var id = $(this).data("id");
             var name = $(this).data("name");
-            var link = "mvc?cmd=${cmd}&mtd=delete&id=" + id;
+            var link = "mvc?cmd=${cmd}&mtd=delete&Id=" + id;
             bootbox.confirm("Are you sure you wish to delete the element " + id + " - " + name + "?", function (result) {
                 if (result) {
-                    alert("Deletar");
                     window.location.href = link;
                 }
             });

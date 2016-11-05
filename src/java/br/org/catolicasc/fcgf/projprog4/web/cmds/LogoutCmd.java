@@ -23,6 +23,8 @@ public class LogoutCmd extends AbstractWebCmd implements IWebCmd {
         session.setAttribute("username", null);
         session.setAttribute("userroleid", null);
         
+        session.invalidate();
+        
         return "signin.jsp";
     }
 
