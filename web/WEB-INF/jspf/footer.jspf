@@ -40,6 +40,8 @@
 
     $(document).ready(function () {
 
+        $('[data-toggle="tooltip"]').tooltip();
+
         if (!isEmpty("${error}")) {
             toastr['error']("${error}");
         }

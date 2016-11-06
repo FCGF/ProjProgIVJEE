@@ -23,7 +23,7 @@
                 <div class="col-md-10 col-md-offset-1">
                     <h2>${name}</h2>
                     <br/>
-                    <a href="#" class="btn btn-info createButton" title="Create" data-action="Create">
+                    <a href="#" class="btn btn-info createButton" data-toggle="tooltip" data-placement="right" title="Create" data-action="Create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 
                     <div class="form-inline pull-right" id="searchForm">
@@ -31,7 +31,7 @@
                             <label for="search" class="sr-only">Search</label>
                             <input type="text" class="form-control search"　id="search" name="search" placeholder="Search"/>
                         </div>
-                        <button type="button" class="btn btn-warning searchButton" id="searchButton" title="Search">
+                        <button type="button" class="btn btn-warning searchButton" data-toggle="tooltip" data-placement="top" id="searchButton" title="Search">
                             <span class="glyphicon glyphicon-search"></span></button>
                     </div>
                 </div>
@@ -69,13 +69,13 @@
                                         </c:forEach>
                                         <td>
                                             <span class="pull-right">
-                                                <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${id}" data-name="${nome}">
+                                                <a href="#" class="btn btn-primary editButton" data-toggle="tooltip" data-placement="left" title="Edit" data-id="${id}" data-name="${nome}">
                                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
 
-                                                <a href="#" class="btn btn-success detailsButton" title="Details" data-id="${id}" data-name="${nome}">
+                                                <a href="#" class="btn btn-success detailsButton" data-toggle="tooltip" data-placement="bottom" title="Details" data-id="${id}" data-name="${nome}">
                                                     <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></a>
 
-                                                <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${id}" data-name="${nome}">
+                                                <a href="#" class="btn btn-danger modal-link deleteButton" data-toggle="tooltip" data-placement="right" title="Delete" data-id="${id}" data-name="${nome}">
                                                     <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>
                                             </span>
                                         </td>
