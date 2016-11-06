@@ -22,7 +22,7 @@
             <div class="row">
                 <div class="col-md-10 col-md-offset-1">
                     <h2>${name}</h2>
-                    <br/>
+                    <hr/>
                     <a href="#" class="btn btn-info createButton" data-toggle="tooltip" data-placement="right" title="Create" data-action="Create">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
 
@@ -31,7 +31,7 @@
                             <label for="search" class="sr-only">Search</label>
                             <input type="text" class="form-control search"　id="search" name="search" placeholder="Search"/>
                         </div>
-                        <button type="button" class="btn btn-warning searchButton" data-toggle="tooltip" data-placement="top" id="searchButton" title="Search">
+                        <button type="button" class="btn btn-default searchButton" data-toggle="tooltip" data-placement="top" id="searchButton" title="Search">
                             <span class="glyphicon glyphicon-search"></span></button>
                     </div>
                 </div>

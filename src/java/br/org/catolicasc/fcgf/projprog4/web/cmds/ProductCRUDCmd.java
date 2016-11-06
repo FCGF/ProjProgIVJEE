@@ -119,6 +119,47 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
     //Para fazer o update e voltar a view de List
     public String editAndList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            ProductDAO productDao = new ProductDAO(factory);
+
+            Product product = productDao.findProduct(id);
+
+            if (product == null) {
+                request.setAttribute(ERROR, "Product not found.");
+            } else {
+                CategoryDAO categoryDao = new CategoryDAO(factory);
+
+                String name = readParameter(request, NOME, product.getNome());
+                String description = readParameter(request, DESCRIPTION, product.getDescription());
+                String price = readParameter(request, PRICE, String.valueOf(product.getPrice()));
+                String categoryId = readParameter(request, CATEGORY, String.valueOf(product.getCategory().getId()));
+
+                Category category = categoryDao.findCategory(Long.parseLong(categoryId));
+
+                product.setNome(name);
+                product.setDescription(description);
+                if (ParseHelper.tryParseDouble(price)) {
+                    product.setPrice(Double.parseDouble(price));
+                }
+                product.setCategory(category);
+
+                try {
+                    productDao.edit(product);
+                    request.setAttribute(MESSAGE, "Product edited successfully.");
+                } catch (Exception ex) {
+                    request.setAttribute(ERROR, "Unable to edit product.");
+                }
+            }
+        }
+
         return list(request, response);
     }
 

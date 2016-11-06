@@ -100,6 +100,36 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
     //Para fazer o update e voltar a view de List
     public String editAndList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            RuleDAO ruleDao = new RuleDAO(factory);
+
+            Rule rule = ruleDao.findRule(id);
+
+            if (rule == null) {
+                request.setAttribute(ERROR, "Rule not found.");
+            } else {
+
+                String name = readParameter(request, NOME, rule.getNome());
+
+                rule.setNome(name);
+
+                try {
+                    ruleDao.edit(rule);
+                    request.setAttribute(MESSAGE, "Rule edited successfully.");
+                } catch (Exception ex) {
+                    request.setAttribute(ERROR, "Unable to edit rule.");
+                }
+            }
+        }
+
         return list(request, response);
     }
 

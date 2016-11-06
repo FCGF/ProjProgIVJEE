@@ -100,6 +100,36 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
     //Para fazer o update e voltar a view de List
     public String editAndList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            CategoryDAO categoryDao = new CategoryDAO(factory);
+
+            Category category = categoryDao.findCategory(id);
+
+            if (category == null) {
+                request.setAttribute(ERROR, "Category not found.");
+            } else {
+
+                String name = readParameter(request, NOME, category.getNome());
+
+                category.setNome(name);
+
+                try {
+                    categoryDao.edit(category);
+                    request.setAttribute(MESSAGE, "Category edited successfully.");
+                } catch (Exception ex) {
+                    request.setAttribute(ERROR, "Unable to edit category.");
+                }
+            }
+        }
+
         return list(request, response);
     }
 

@@ -38,6 +38,11 @@
         return (!str || 0 === str.length);
     }
 
+    function search() {
+        var srch = $('input[name="search"]').val();
+        window.location.href = "mvc?cmd=${cmd}&mtd=list&srch=" + srch;
+    }
+
     $(document).ready(function () {
 
         $('[data-toggle="tooltip"]').tooltip();
@@ -94,8 +99,13 @@
         });
 
         $(".searchButton").click(function () {
-            var srch = $('input[name="search"]').val();
-            window.location.href = "mvc?cmd=${cmd}&mtd=list&srch=" + srch;
+            search();
+        });
+
+        $('input[name="search"]').keypress(function (e) {
+            if (e.which === 13) {
+                search();
+            }
         });
 
     });

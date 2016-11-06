@@ -118,6 +118,45 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
     //Para fazer o update e voltar a view de List
     public String editAndList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+        } else {
+            Long id = Long.parseLong(receivedId);
+
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            UserDAO userDao = new UserDAO(factory);
+
+            User user = userDao.findUser(id);
+
+            if (user == null) {
+                request.setAttribute(ERROR, "User not found.");
+            } else {
+                RuleDAO ruleDao = new RuleDAO(factory);
+
+                String name = readParameter(request, NOME, user.getNome());
+                String email = readParameter(request, EMAIL, user.getEmail());
+                String password = readParameter(request, PASSWORD, user.getSenha());
+                String ruleId = readParameter(request, RULE, String.valueOf(user.getRule().getId()));
+
+                Rule rule = ruleDao.findRule(Long.parseLong(ruleId));
+
+                user.setNome(name);
+                user.setEmail(email);
+                user.setSenha(password);
+                user.setRule(rule);
+
+                try {
+                    userDao.edit(user);
+                    request.setAttribute(MESSAGE, "User edited successfully.");
+                } catch (Exception ex) {
+                    request.setAttribute(ERROR, "Unable to edit user.");
+                }
+            }
+        }
+
         return list(request, response);
     }
 
@@ -200,6 +239,7 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 fields.add(new FieldData<>(ID, user.getId(), false, null, Type.ID));
                 fields.add(new FieldData<>(NOME, user.getNome(), false, null, Type.TEXT));
                 fields.add(new FieldData<>(EMAIL, user.getEmail(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(PASSWORD, user.getSenha(), false, null, Type.PASSWORD));
                 fields.add(new FieldData<>(RULE, user.getRule(), true, rules, Type.TEXT));
 
                 request.setAttribute(FIELDS, fields);

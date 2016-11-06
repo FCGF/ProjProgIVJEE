@@ -21,7 +21,7 @@
 
         <div id="main" class="container-fluid">
 
-            <h4 class="page-header">Create ${name}</h4>
+            <h2 class="page-header">Create ${name}</h2>
 
             <form id="formEdit" name="formAddNew" method="POST" action="mvc?cmd=${cmd}&mtd=makeAndList">
                 <c:forEach var="field" items="${fields}">
@@ -99,7 +99,7 @@
                 <div class="row col-md-12 text-center">
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="left" title="Create">Create</button>
                     <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Clean" id="cleanButton">Clean</button>
-                    <button type="button" class="btn btn-danger listButton" data-toggle="tooltip" data-placement="right" title="Cancel">Cancel</button>
+                    <button type="button" class="btn btn-warning listButton" data-toggle="tooltip" data-placement="right" title="Cancel">Cancel</button>
                 </div>
 
             </form>

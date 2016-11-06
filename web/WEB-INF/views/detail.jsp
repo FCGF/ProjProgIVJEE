@@ -28,7 +28,7 @@
                         <c:when test="${field.isCombo()}">
                             <h4><b><c:out value="${field.getName()}"/>:</b></h4> <p><c:out value="${field.getValue().getNome()}"/></p>
                         </c:when>
-                        <c:when test="${not field.isCombo()}">
+                        <c:when test="${not field.isCombo() and not (field.getType() == 'PASSWORD')}">
                             <h4><b><c:out value="${field.getName()}"/>:</b></h4> <p><c:out value="${field.getValue()}"/></p>
                         </c:when>
                     </c:choose>
