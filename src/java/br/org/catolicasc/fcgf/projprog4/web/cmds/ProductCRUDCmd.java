@@ -1,13 +1,13 @@
 package br.org.catolicasc.fcgf.projprog4.web.cmds;
 
 import br.org.catolicasc.fcgf.projprog4.web.abstracts.AbstractWebCmd;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.FieldData;
 import br.org.catolicasc.fcgf.projprog4.web.helpers.ParseHelper;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.Type;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,14 +46,14 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
             products = findProducts(searchFor.toLowerCase());
         }
 
-        List<Map<String, Object>> objects = new ArrayList<>();
-        products.stream().map((u) -> {
-            Map<String, Object> fields = new LinkedHashMap<>(8);
-            fields.put(ID, u.getId());
-            fields.put(NOME, u.getNome());
-            fields.put(DESCRIPTION, u.getDescription());
-            fields.put(PRICE, u.getPrice());
-            fields.put(CATEGORY, u.getCategory().getNome());
+        List<List<FieldData<Category>>> objects = new ArrayList<>();
+        products.stream().map((p) -> {
+            List<FieldData<Category>> fields = new ArrayList<>(8);
+            fields.add(new FieldData<>(ID, p.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(NOME, p.getNome(), false, null, Type.TEXT));
+            fields.add(new FieldData<>(DESCRIPTION, p.getDescription(), false, null, Type.TEXT));
+            fields.add(new FieldData<>(PRICE, p.getPrice(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(CATEGORY, p.getCategory().getNome(), true, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
             objects.add(fields);
@@ -72,11 +72,11 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
         EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
         CategoryDAO dao = new CategoryDAO(factory);
 
-        Map<String, List<Category>> fields = new LinkedHashMap<>();
-        fields.put(NOME, null);
-        fields.put(DESCRIPTION, null);
-        fields.put(PRICE, null);
-        fields.put(CATEGORY, dao.findAll());
+        List<FieldData<Category>> fields = new ArrayList<>(6);
+        fields.add(new FieldData<>(NOME, null, false, null, Type.TEXT));
+        fields.add(new FieldData<>(DESCRIPTION, null, false, null, Type.TEXT));
+        fields.add(new FieldData<>(PRICE, null, false, null, Type.NUMBER));
+        fields.add(new FieldData<>(CATEGORY, null, true, dao.findAll(), Type.TEXT));
 
         request.setAttribute(FIELDS, fields);
         setName(request);
@@ -126,12 +126,12 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 request.setAttribute(ERROR, "Product not found.");
                 link = list(request, response);
             } else {
-                Map<String, Object> fields = new LinkedHashMap<>(6);
-                fields.put(ID, product.getId());
-                fields.put(NOME, product.getNome());
-                fields.put(DESCRIPTION, product.getDescription());
-                fields.put(PRICE, product.getPrice());
-                fields.put(CATEGORY, product.getCategory().getNome());
+                List<FieldData<Category>> fields = new ArrayList<>(8);
+                fields.add(new FieldData<>(ID, product.getId(), false, null, Type.NUMBER));
+                fields.add(new FieldData<>(NOME, product.getNome(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(DESCRIPTION, product.getDescription(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(PRICE, product.getPrice(), false, null, Type.NUMBER));
+                fields.add(new FieldData<>(CATEGORY, product.getCategory().getNome(), true, null, Type.TEXT));
 
                 request.setAttribute(FIELDS, fields);
                 request.setAttribute(NAME, "Product");

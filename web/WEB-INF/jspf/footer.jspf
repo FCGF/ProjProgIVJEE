@@ -1,6 +1,31 @@
 <%-- any content can be specified here e.g.: --%>
 <%@ page pageEncoding="UTF-8" %>
-<h4>Footer</h4>
+<footer>
+    <div class="footer-bottom">
+        <div class="container-fluid">
+            <hr/>
+            <div class="row">
+                <div class="col-md-8">
+                    <jsp:useBean id="now" class="java.util.Date" />
+                    <p>&copy; <fmt:formatDate value="${now}" pattern="yyyy" /> - FCGF</p>
+                </div>
+                <div class="col-md-4">
+                    <div class="f-social pull-right">
+                        <a class="fa fa-twitter" href="#"></a>
+                        <a class="fa fa-facebook" href="#"></a>
+                        <a class="fa fa-linkedin" href="#"></a>
+                        <a class="fa fa-dribbble" href="#"></a>
+                        <a class="fa fa-google-plus" href="#"></a>
+                        <a class="fa fa-skype" href="#"></a>
+                        <a class="fa fa-behance" href="#"></a>
+                        <a class="fa fa-stumbleupon" href="#"></a>
+                        <a class="fa fa-rss" href="#"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
 
 <!-- JQuery and Bootstrap -->
 <script src="./assets/core/jquery-3.1.1.min.js"></script>

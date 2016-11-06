@@ -1,13 +1,13 @@
 package br.org.catolicasc.fcgf.projprog4.web.cmds;
 
 import br.org.catolicasc.fcgf.projprog4.web.abstracts.AbstractWebCmd;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.FieldData;
 import br.org.catolicasc.fcgf.projprog4.web.helpers.ParseHelper;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.Type;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,13 +46,13 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
             users = findUsers(searchFor.toLowerCase());
         }
 
-        List<Map<String, Object>> objects = new ArrayList<>();
+        List<List<FieldData<Rule>>> objects = new ArrayList<>();
         users.stream().map((u) -> {
-            Map<String, Object> fields = new LinkedHashMap<>(6);
-            fields.put(ID, u.getId());
-            fields.put(NOME, u.getNome());
-            fields.put(EMAIL, u.getEmail());
-            fields.put(RULE, u.getRule().getNome());
+            List<FieldData<Rule>> fields = new ArrayList<>(6);
+            fields.add(new FieldData<>(ID, u.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(NOME, u.getNome(), false, null, Type.TEXT));
+            fields.add(new FieldData<>(EMAIL, u.getEmail(), false, null, Type.TEXT));
+            fields.add(new FieldData<>(RULE, u.getRule().getNome(), true, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
             objects.add(fields);
@@ -71,11 +71,11 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
         EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
         RuleDAO ruleDao = new RuleDAO(factory);
 
-        Map<String, List<Rule>> fields = new LinkedHashMap<>();
-        fields.put(NOME, null);
-        fields.put(EMAIL, null);
-        fields.put(PASSWORD, null);
-        fields.put(RULE, ruleDao.findAll());
+        List<FieldData<Rule>> fields = new ArrayList<>(6);
+        fields.add(new FieldData<>(NOME, null, false, null, Type.TEXT));
+        fields.add(new FieldData<>(EMAIL, null, false, null, Type.TEXT));
+        fields.add(new FieldData<>(PASSWORD, null, false, null, Type.PASSWORD));
+        fields.add(new FieldData<>(RULE, null, true, ruleDao.findAll(), Type.TEXT));
 
         request.setAttribute(FIELDS, fields);
         setName(request);
@@ -125,11 +125,11 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 request.setAttribute(ERROR, "User not found.");
                 link = list(request, response);
             } else {
-                Map<String, Object> fields = new LinkedHashMap<>(6);
-                fields.put(ID, user.getId());
-                fields.put(NOME, user.getNome());
-                fields.put(EMAIL, user.getEmail());
-                fields.put(RULE, user.getRule().getNome());
+                List<FieldData<Rule>> fields = new ArrayList<>(6);
+                fields.add(new FieldData<>(ID, user.getId(), false, null, Type.NUMBER));
+                fields.add(new FieldData<>(NOME, user.getNome(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(EMAIL, user.getEmail(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(RULE, user.getRule().getNome(), true, null, Type.TEXT));
 
                 request.setAttribute(FIELDS, fields);
                 request.setAttribute(NAME, "User");

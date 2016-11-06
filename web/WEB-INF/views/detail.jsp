@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -21,28 +22,32 @@
                 <h2>${name} Details</h2>
                 <hr/>
             </div>
-            <c:forEach var="field" items="${fields.entrySet()}">
+            <c:forEach var="field" items="${fields}">
                 <div class="row col-md-6 col-md-offset-3">
-                    <h4><b><c:out value="${field.getKey()}"/>:</b></h4> <p><c:out value="${field.getValue()}"/></p>
+                    <h4><b><c:out value="${field.getName()}"/>:</b></h4> <p><c:out value="${field.getValue()}"/></p>
+                    <c:choose>
+                        <c:when test="${field.getName() == 'Id'}">
+                            <c:set var="id" scope="page" value="${field.getValue()}"/>
+                        </c:when>
+                        <c:when test="${field.getName() == 'Nome'}">
+                            <c:set var="nome" scope="page" value="${field.getValue()}"/>
+                        </c:when>
+                    </c:choose>
                 </div>
             </c:forEach>
             <div class="row col-md-12 text-center">
                 <a href="#" class="btn btn-success listButton" title="List" >
                     <span class="glyphicon glyphicon-list" aria-hidden="true"></a>
 
-                <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${id}" data-name="${nome}">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
 
-                <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${id}" data-name="${nome}">
                     <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>
             </div>
         </div
 
-<!--Link: prog4/mvc?cmd=${cmd}&mtd=${mtd}-->
-
         <!-- FOOTER -->  
         <%@include file="/WEB-INF/jspf/footer.jspf"%>
-
-
     </body>
 </html>

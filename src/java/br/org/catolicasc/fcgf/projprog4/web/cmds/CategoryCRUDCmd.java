@@ -1,7 +1,9 @@
 package br.org.catolicasc.fcgf.projprog4.web.cmds;
 
 import br.org.catolicasc.fcgf.projprog4.web.abstracts.AbstractWebCmd;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.FieldData;
 import br.org.catolicasc.fcgf.projprog4.web.helpers.ParseHelper;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.Type;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,11 +43,11 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
             categories = findCategories(searchFor.toLowerCase());
         }
 
-        List<Map<String, Object>> objects = new ArrayList<>();
-        categories.stream().map((u) -> {
-            Map<String, Object> fields = new LinkedHashMap<>(6);
-            fields.put(ID, u.getId());
-            fields.put(NOME, u.getNome());
+        List<List<FieldData<Object>>> objects = new ArrayList<>();
+        categories.stream().map((c) -> {
+            List<FieldData<Object>> fields = new ArrayList<>(3);
+            fields.add(new FieldData<>(ID, c.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(NOME, c.getNome(), false, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
             objects.add(fields);
@@ -61,8 +63,8 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
     public String create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
 
-        Map<String, List<Object>> fields = new LinkedHashMap<>();
-        fields.put(NOME, null);
+        List<FieldData<Object>> fields = new ArrayList<>(2);
+        fields.add(new FieldData<>(NOME, null, false, null, Type.TEXT));
 
         request.setAttribute(FIELDS, fields);
         setName(request);
@@ -107,9 +109,9 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 request.setAttribute(ERROR, "Category not found.");
                 link = list(request, response);
             } else {
-                Map<String, Object> fields = new LinkedHashMap<>(6);
-                fields.put(ID, category.getId());
-                fields.put(NOME, category.getNome());
+                List<FieldData<Object>> fields = new ArrayList<>(3);
+                fields.add(new FieldData<>(ID, category.getId(), false, null, Type.NUMBER));
+                fields.add(new FieldData<>(NOME, category.getNome(), false, null, Type.TEXT));
 
                 request.setAttribute(FIELDS, fields);
                 request.setAttribute(NAME, "Category");

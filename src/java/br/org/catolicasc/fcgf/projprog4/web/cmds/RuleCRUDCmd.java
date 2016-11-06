@@ -1,13 +1,13 @@
 package br.org.catolicasc.fcgf.projprog4.web.cmds;
 
 import br.org.catolicasc.fcgf.projprog4.web.abstracts.AbstractWebCmd;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.FieldData;
 import br.org.catolicasc.fcgf.projprog4.web.helpers.ParseHelper;
+import br.org.catolicasc.fcgf.projprog4.web.helpers.Type;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -41,11 +41,11 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
             rules = findRules(searchFor.toLowerCase());
         }
 
-        List<Map<String, Object>> objects = new ArrayList<>();
-        rules.stream().map((u) -> {
-            Map<String, Object> fields = new LinkedHashMap<>(3);
-            fields.put(ID, u.getId());
-            fields.put(NOME, u.getNome());
+        List<List<FieldData<Object>>> objects = new ArrayList<>();
+        rules.stream().map((r) -> {
+            List<FieldData<Object>> fields = new ArrayList<>(3);
+            fields.add(new FieldData<>(ID, r.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(NOME, r.getNome(), false, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
             objects.add(fields);
@@ -61,8 +61,8 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
     public String create(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
 
-        Map<String, List<Object>> fields = new LinkedHashMap<>();
-        fields.put(NOME, null);
+        List<FieldData<Object>> fields = new ArrayList<>(2);
+        fields.add(new FieldData<>(NOME, null, false, null, Type.TEXT));
 
         request.setAttribute(FIELDS, fields);
         setName(request);
@@ -107,9 +107,9 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 request.setAttribute(ERROR, "Rule not found.");
                 link = list(request, response);
             } else {
-                Map<String, Object> fields = new LinkedHashMap<>(6);
-                fields.put(ID, rule.getId());
-                fields.put(NOME, rule.getNome());
+                List<FieldData<Object>> fields = new ArrayList<>(3);
+                fields.add(new FieldData<>(ID, rule.getId(), false, null, Type.NUMBER));
+                fields.add(new FieldData<>(NOME, rule.getNome(), false, null, Type.TEXT));
 
                 request.setAttribute(FIELDS, fields);
                 request.setAttribute(NAME, "Rule");

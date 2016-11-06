@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -41,13 +42,13 @@
                     <c:if test="${empty objects}">
                         <h3>No results found!</h3>
                     </c:if>
-                    
+
                     <c:if test="${not empty objects}">
                         <table id="dataGrid" class="table table-striped table-responsive table-hover">
                             <thead>
                                 <tr>
-                                    <c:forEach var="field" items="${objects.get(0).entrySet()}">
-                                        <td>${field.getKey()}</td>
+                                    <c:forEach var="field" items="${objects.get(0)}">
+                                        <td>${field.getName()}</td>
                                     </c:forEach>
                                     <td> </td>
                                 </tr>
@@ -55,18 +56,26 @@
                             <tbody>
                                 <c:forEach var="fields" items="${objects}">
                                     <tr>
-                                        <c:forEach var="field" items="${fields.entrySet()}">
+                                        <c:forEach var="field" items="${fields}">
                                             <td><c:out value="${field.getValue()}"/></td>
+                                            <c:choose>
+                                                <c:when test="${field.getName() == 'Id'}">
+                                                    <c:set var="id" scope="page" value="${field.getValue()}"/>
+                                                </c:when>
+                                                <c:when test="${field.getName() == 'Nome'}">
+                                                    <c:set var="nome" scope="page" value="${field.getValue()}"/>
+                                                </c:when>
+                                            </c:choose>
                                         </c:forEach>
                                         <td>
                                             <span class="pull-right">
-                                                <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${id}" data-name="${nome}">
                                                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
 
-                                                <a href="#" class="btn btn-success detailsButton" title="Details" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                <a href="#" class="btn btn-success detailsButton" title="Details" data-id="${id}" data-name="${nome}">
                                                     <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></a>
 
-                                                <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+                                                <a href="#" class="btn btn-danger modal-link deleteButton" title="Delete" data-id="${id}" data-name="${nome}">
                                                     <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>
                                             </span>
                                         </td>
