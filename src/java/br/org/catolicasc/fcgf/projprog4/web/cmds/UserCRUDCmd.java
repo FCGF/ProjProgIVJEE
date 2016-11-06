@@ -49,10 +49,10 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
         List<List<FieldData<Rule>>> objects = new ArrayList<>();
         users.stream().map((u) -> {
             List<FieldData<Rule>> fields = new ArrayList<>(6);
-            fields.add(new FieldData<>(ID, u.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(ID, u.getId(), false, null, Type.ID));
             fields.add(new FieldData<>(NOME, u.getNome(), false, null, Type.TEXT));
             fields.add(new FieldData<>(EMAIL, u.getEmail(), false, null, Type.TEXT));
-            fields.add(new FieldData<>(RULE, u.getRule().getNome(), true, null, Type.TEXT));
+            fields.add(new FieldData<>(RULE, u.getRule(), true, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
             objects.add(fields);
@@ -107,44 +107,12 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setCmdName(request);
-
-        final String receivedId = request.getParameter(ID);
-        final String link;
-
-        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
-            request.setAttribute(ERROR, "Id not received.");
-            link = list(request, response);
-        } else {
-            Long id = Long.parseLong(receivedId);
-            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
-            UserDAO dao = new UserDAO(factory);
-            User user = dao.findUser(id);
-
-            if (user == null) {
-                request.setAttribute(ERROR, "User not found.");
-                link = list(request, response);
-            } else {
-                List<FieldData<Rule>> fields = new ArrayList<>(6);
-                fields.add(new FieldData<>(ID, user.getId(), false, null, Type.NUMBER));
-                fields.add(new FieldData<>(NOME, user.getNome(), false, null, Type.TEXT));
-                fields.add(new FieldData<>(EMAIL, user.getEmail(), false, null, Type.TEXT));
-                fields.add(new FieldData<>(RULE, user.getRule().getNome(), true, null, Type.TEXT));
-
-                request.setAttribute(FIELDS, fields);
-                request.setAttribute(NAME, "User");
-
-                link = DETAIL_PATH;
-            }
-        }
-
-        return link;
+        return detailOrUpdate(request, response, false);
     }
 
     //Para criar a view de Update
     public String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setCmdName(request);
-        return list(request, response);
+        return detailOrUpdate(request, response, true);
     }
 
     //Para fazer o update e voltar a view de List
@@ -206,4 +174,41 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
     private void setName(HttpServletRequest request) {
         request.setAttribute(NAME, "Users");
     }
+
+    private String detailOrUpdate(HttpServletRequest request, HttpServletResponse response, boolean update) throws ServletException, IOException {
+        setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+        final String link;
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+            link = list(request, response);
+        } else {
+            Long id = Long.parseLong(receivedId);
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            UserDAO userDao = new UserDAO(factory);
+            User user = userDao.findUser(id);
+
+            if (user == null) {
+                request.setAttribute(ERROR, "User not found.");
+                link = list(request, response);
+            } else {
+                List<Rule> rules = update ? new RuleDAO(factory).findAll() : null;
+
+                List<FieldData<Rule>> fields = new ArrayList<>(6);
+                fields.add(new FieldData<>(ID, user.getId(), false, null, Type.ID));
+                fields.add(new FieldData<>(NOME, user.getNome(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(EMAIL, user.getEmail(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(RULE, user.getRule(), true, rules, Type.TEXT));
+
+                request.setAttribute(FIELDS, fields);
+                request.setAttribute(NAME, "User");
+
+                link = update ? UPDATE_PATH : DETAIL_PATH;
+            }
+        }
+        return link;
+    }
+
 }

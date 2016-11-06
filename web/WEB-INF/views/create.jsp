@@ -99,7 +99,7 @@
                 <div class="row col-md-12 text-center">
                     <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="left" title="Create">Create</button>
                     <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Clean" id="cleanButton">Clean</button>
-                    <button type="button" class="btn btn-danger listButton" data-toggle="tooltip" data-placement="right" title="Cancel" id="cleanButton">Cancel</button>
+                    <button type="button" class="btn btn-danger listButton" data-toggle="tooltip" data-placement="right" title="Cancel">Cancel</button>
                 </div>
 
             </form>

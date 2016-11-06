@@ -7,9 +7,7 @@ import br.org.catolicasc.fcgf.projprog4.web.helpers.Type;
 import br.org.catolicasc.fcgf.projprog4.web.interfaces.IWebCmd;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +44,7 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
         List<List<FieldData<Object>>> objects = new ArrayList<>();
         categories.stream().map((c) -> {
             List<FieldData<Object>> fields = new ArrayList<>(3);
-            fields.add(new FieldData<>(ID, c.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(ID, c.getId(), false, null, Type.ID));
             fields.add(new FieldData<>(NOME, c.getNome(), false, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
@@ -91,39 +89,16 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setCmdName(request);
-
-        final String receivedId = request.getParameter(ID);
-        final String link;
-
-        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
-            request.setAttribute(ERROR, "Id not received.");
-            link = list(request, response);
-        } else {
-            Long id = Long.parseLong(receivedId);
-            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
-            CategoryDAO dao = new CategoryDAO(factory);
-            Category category = dao.findCategory(id);
-
-            if (category == null) {
-                request.setAttribute(ERROR, "Category not found.");
-                link = list(request, response);
-            } else {
-                List<FieldData<Object>> fields = new ArrayList<>(3);
-                fields.add(new FieldData<>(ID, category.getId(), false, null, Type.NUMBER));
-                fields.add(new FieldData<>(NOME, category.getNome(), false, null, Type.TEXT));
-
-                request.setAttribute(FIELDS, fields);
-                request.setAttribute(NAME, "Category");
-
-                link = DETAIL_PATH;
-            }
-        }
-
-        return link;
+        return detailOrUpdate(request, response, false);
     }
 
+    //Para criar a view de Update
     public String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        return detailOrUpdate(request, response, true);
+    }
+
+    //Para fazer o update e voltar a view de List
+    public String editAndList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
         return list(request, response);
     }
@@ -181,4 +156,38 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
     private void setName(HttpServletRequest request) {
         request.setAttribute(NAME, "Categories");
     }
+
+    private String detailOrUpdate(HttpServletRequest request, HttpServletResponse response, boolean update) throws ServletException, IOException {
+        setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+        final String link;
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+            link = list(request, response);
+        } else {
+            Long id = Long.parseLong(receivedId);
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            CategoryDAO dao = new CategoryDAO(factory);
+            Category category = dao.findCategory(id);
+
+            if (category == null) {
+                request.setAttribute(ERROR, "Category not found.");
+                link = list(request, response);
+            } else {
+                List<FieldData<Object>> fields = new ArrayList<>(3);
+                fields.add(new FieldData<>(ID, category.getId(), false, null, Type.ID));
+                fields.add(new FieldData<>(NOME, category.getNome(), false, null, Type.TEXT));
+
+                request.setAttribute(FIELDS, fields);
+                request.setAttribute(NAME, "Category");
+
+                link = update ? UPDATE_PATH : DETAIL_PATH;
+            }
+        }
+
+        return link;
+    }
+
 }

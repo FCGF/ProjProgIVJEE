@@ -60,7 +60,6 @@
 
         $(".editButton").click(function () {
             var id = $(this).data("id");
-            alert("Update " + id);
             window.location.href = "mvc?cmd=${cmd}&mtd=update&Id=" + id;
         });
 

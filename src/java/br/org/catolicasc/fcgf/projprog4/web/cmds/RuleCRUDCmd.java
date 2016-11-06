@@ -44,7 +44,7 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
         List<List<FieldData<Object>>> objects = new ArrayList<>();
         rules.stream().map((r) -> {
             List<FieldData<Object>> fields = new ArrayList<>(3);
-            fields.add(new FieldData<>(ID, r.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(ID, r.getId(), false, null, Type.ID));
             fields.add(new FieldData<>(NOME, r.getNome(), false, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
@@ -89,39 +89,16 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setCmdName(request);
-
-        final String receivedId = request.getParameter(ID);
-        final String link;
-
-        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
-            request.setAttribute(ERROR, "Id not received.");
-            link = list(request, response);
-        } else {
-            Long id = Long.parseLong(receivedId);
-            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
-            RuleDAO dao = new RuleDAO(factory);
-            Rule rule = dao.findRule(id);
-
-            if (rule == null) {
-                request.setAttribute(ERROR, "Rule not found.");
-                link = list(request, response);
-            } else {
-                List<FieldData<Object>> fields = new ArrayList<>(3);
-                fields.add(new FieldData<>(ID, rule.getId(), false, null, Type.NUMBER));
-                fields.add(new FieldData<>(NOME, rule.getNome(), false, null, Type.TEXT));
-
-                request.setAttribute(FIELDS, fields);
-                request.setAttribute(NAME, "Rule");
-
-                link = DETAIL_PATH;
-            }
-        }
-
-        return link;
+        return detailOrUpdate(request, response, false);
     }
 
+    //Para criar a view de Update
     public String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        return detailOrUpdate(request, response, true);
+    }
+
+    //Para fazer o update e voltar a view de List
+    public String editAndList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
         return list(request, response);
     }
@@ -178,5 +155,38 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
     private void setName(HttpServletRequest request) {
         request.setAttribute(NAME, "Rules");
+    }
+
+    private String detailOrUpdate(HttpServletRequest request, HttpServletResponse response, boolean update) throws ServletException, IOException {
+        setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+        final String link;
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+            link = list(request, response);
+        } else {
+            Long id = Long.parseLong(receivedId);
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            RuleDAO dao = new RuleDAO(factory);
+            Rule rule = dao.findRule(id);
+
+            if (rule == null) {
+                request.setAttribute(ERROR, "Rule not found.");
+                link = list(request, response);
+            } else {
+                List<FieldData<Object>> fields = new ArrayList<>(3);
+                fields.add(new FieldData<>(ID, rule.getId(), false, null, Type.ID));
+                fields.add(new FieldData<>(NOME, rule.getNome(), false, null, Type.TEXT));
+
+                request.setAttribute(FIELDS, fields);
+                request.setAttribute(NAME, "Rule");
+
+                link = update ? UPDATE_PATH : DETAIL_PATH;
+            }
+        }
+
+        return link;
     }
 }

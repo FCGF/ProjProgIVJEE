@@ -24,69 +24,77 @@
             <h4 class="page-header">Edit ${name}</h4>
 
             <form id="formEdit" name="formEdit" method="POST" action="mvc?cmd=${cmd}&mtd=editAndList">
-                <c:forEach var="field" items="${fields.entrySet()}">
-
+                <c:forEach var="field" items="${fields}">
                     <div class="row">
                         <div class="form-group col-md-4 col-md-offset-4">
-                            <label for="<c:out value="${field.getKey()}"/>"><c:out value="${field.getKey()}"/>:</label>
+                            <label for="<c:out value="${field.getName()}"/>"><c:out value="${field.getName()}"/>:</label>
 
                             <c:choose>
-                                <c:when test="${empty field.getValue()}">
-                                    
-                                    <c:choose>
-                                        <c:when test="${fn:startsWith(field.getKey(), 'Price')}">
-                                            <input type="number" 
-                                                   min="0"
-                                                   class="form-control" 
-                                                   id="<c:out value="${field.getKey()}"/>" 
-                                                   name="<c:out value="${field.getKey()}"/>" 
-                                                   required="required" 
-                                                   placeholder="Inform the <c:out value="${field.getKey()}"/>" 
-                                                   maxlength="100"
-                                                   data-property="<c:out value="${field.getKey()}"/>">
-                                            <span id="<c:out value="${field.getKey()}"/>Count" 
-                                                  class="label label-warning">100 left!</span>
-                                        </c:when>
-                                        <c:when test="${fn:startsWith(field.getKey(), 'Password')}">
-                                            <input type="password" 
-                                                   class="form-control" 
-                                                   id="<c:out value="${field.getKey()}"/>" 
-                                                   name="<c:out value="${field.getKey()}"/>" 
-                                                   required="required" 
-                                                   placeholder="Inform the <c:out value="${field.getKey()}"/>" 
-                                                   maxlength="100"
-                                                   data-property="<c:out value="${field.getKey()}"/>">
-                                            <span id="<c:out value="${field.getKey()}"/>Count" 
-                                                  class="label label-warning">100 left!</span>
-                                        </c:when>
-                                        <c:when test="${not fn:startsWith(field.getKey(), 'Price') and not fn:startsWith(field.getKey(), 'Password')}">
-                                            <input type="text" 
-                                                   class="form-control" 
-                                                   id="<c:out value="${field.getKey()}"/>" 
-                                                   name="<c:out value="${field.getKey()}"/>" 
-                                                   required="required" 
-                                                   placeholder="Inform the <c:out value="${field.getKey()}"/>" 
-                                                   maxlength="100"
-                                                   data-property="<c:out value="${field.getKey()}"/>">
-                                            <span id="<c:out value="${field.getKey()}"/>Count" 
-                                                  class="label label-warning">100 left!</span>
-                                        </c:when>
-                                    </c:choose>
-
-                                </c:when>
-                                <c:when test="${not empty field.getValue()}">
-                                    <SELECT id="<c:out value="${field.getKey()}"/>" 
-                                            name="<c:out value="${field.getKey()}"/>" 
+                                <c:when test="${field.isCombo()}">
+                                    <SELECT id="<c:out value="${field.getName()}"/>" 
+                                            name="<c:out value="${field.getName()}"/>" 
                                             size="1" 
                                             class="form-control"
-                                            data-property="<c:out value="${field.getKey()}"/>">
+                                            data-property="<c:out value="${field.getName()}"/>">
 
-                                        <c:forEach var="option" items="${field.getValue()}">
-                                            <option value="${option.getId()}">${option.getNome()}</option>
+                                        <c:forEach var="option" items="${field.getAllValues()}">
+                                            <option value="${option.getId()}" ${option == field.getValue() ? 'selected="selected"' : ''}>${option.getNome()}</option>
                                         </c:forEach>
 
                                     </SELECT>
                                 </c:when>
+                                <c:when test="${not field.isCombo()}">
+
+                                    <c:choose>
+                                        <c:when test="${field.getType() == 'ID'}">
+                                            <p type="text" 
+                                                   class="form-control-static">${field.getValue()}</p>
+                                        </c:when>
+                                        <c:when test="${field.getType() == 'NUMBER'}">
+                                            <input type="number" 
+                                                   min="0"
+                                                   class="form-control" 
+                                                   id="<c:out value="${field.getName()}"/>" 
+                                                   name="<c:out value="${field.getName()}"/>" 
+                                                   required="required" 
+                                                   placeholder="Inform the <c:out value="${field.getName()}"/>" 
+                                                   maxlength="100"
+                                                   data-property="<c:out value="${field.getName()}"/>"
+                                                   value="${field.getValue()}">
+                                            <span id="<c:out value="${field.getName()}"/>Count" 
+                                                  class="label label-warning">100 left!</span>
+                                        </c:when>
+                                        <c:when test="${field.getType() == 'PASSWORD'}">
+                                            <input type="password" 
+                                                   class="form-control" 
+                                                   id="<c:out value="${field.getName()}"/>" 
+                                                   name="<c:out value="${field.getName()}"/>" 
+                                                   required="required" 
+                                                   placeholder="Inform the <c:out value="${field.getName()}"/>" 
+                                                   maxlength="100"
+                                                   data-property="<c:out value="${field.getName()}"/>"
+                                                   value="${field.getValue()}">
+                                            <span id="<c:out value="${field.getName()}"/>Count" 
+                                                  class="label label-warning">100 left!</span>
+                                        </c:when>
+                                        <c:when test="${field.getType() == 'TEXT'}">
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="<c:out value="${field.getName()}"/>" 
+                                                   name="<c:out value="${field.getName()}"/>" 
+                                                   required="required" 
+                                                   placeholder="Inform the <c:out value="${field.getName()}"/>" 
+                                                   maxlength="100"
+                                                   data-property="<c:out value="${field.getName()}"/>"
+                                                   value="${field.getValue()}">
+                                            <span id="<c:out value="${field.getName()}"/>Count" 
+                                                  class="label label-warning">100 left!</span>
+                                        </c:when>
+
+                                    </c:choose>
+
+                                </c:when>
+
                             </c:choose>
                         </div>
                     </div>
@@ -94,9 +102,9 @@
                 </c:forEach> 
 
                 <div class="row col-md-12 text-center">
-                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="bottom" title="Create">Create</button>
-                    <button type="button" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Clean" id="cleanButton">Clean</button>
-                    <button type="button" class="btn btn-danger listButton" data-toggle="tooltip" data-placement="right" title="Cancel" id="cleanButton">Cancel</button>
+                    <button type="submit" class="btn btn-success" data-toggle="tooltip" data-placement="left" title="Edit">Edit</button>
+                    <button type="reset" class="btn btn-primary" data-toggle="tooltip" data-placement="bottom" title="Reset" id="cleanButton">Reset</button>
+                    <button type="button" class="btn btn-danger listButton" data-toggle="tooltip" data-placement="right" title="Cancel">Cancel</button>
                 </div>
 
             </form>
@@ -107,8 +115,6 @@
 
         <script type="text/javascript">
             $(document).ready(function () {
-
-                $('[data-toggle="tooltip"]').tooltip();
 
                 $('input').keyup(function () {
                     var currentSize = $(this).val().length;
@@ -122,8 +128,8 @@
                 });
 
                 $('#cleanButton').click(function () {
-                    $('#formAddNew input').val("");
-                    $("#formAddNew span").text("100 left!");
+                    $('#formEdit input').val("");
+                    $("#formEdit span").text("100 left!");
                 });
 
             });

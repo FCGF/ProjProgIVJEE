@@ -24,7 +24,14 @@
             </div>
             <c:forEach var="field" items="${fields}">
                 <div class="row col-md-6 col-md-offset-3">
-                    <h4><b><c:out value="${field.getName()}"/>:</b></h4> <p><c:out value="${field.getValue()}"/></p>
+                    <c:choose>
+                        <c:when test="${field.isCombo()}">
+                            <h4><b><c:out value="${field.getName()}"/>:</b></h4> <p><c:out value="${field.getValue().getNome()}"/></p>
+                        </c:when>
+                        <c:when test="${not field.isCombo()}">
+                            <h4><b><c:out value="${field.getName()}"/>:</b></h4> <p><c:out value="${field.getValue()}"/></p>
+                        </c:when>
+                    </c:choose>
                     <c:choose>
                         <c:when test="${field.getName() == 'Id'}">
                             <c:set var="id" scope="page" value="${field.getValue()}"/>
@@ -36,11 +43,11 @@
                 </div>
             </c:forEach>
             <div class="row col-md-12 text-center">
-                <a href="#" class="btn btn-success listButton" data-toggle="tooltip" data-placement="left" title="List" >
-                    <span class="glyphicon glyphicon-list" aria-hidden="true"></a>
-
-                <a href="#" class="btn btn-primary editButton" data-toggle="tooltip" data-placement="bottom" title="Edit" data-id="${id}" data-name="${nome}">
+                <a href="#" class="btn btn-primary editButton" data-toggle="tooltip" data-placement="left" title="Edit" data-id="${id}" data-name="${nome}">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></a>
+
+                <a href="#" class="btn btn-success listButton" data-toggle="tooltip" data-placement="bottom" title="List" >
+                    <span class="glyphicon glyphicon-list" aria-hidden="true"></a>
 
                 <a href="#" class="btn btn-danger modal-link deleteButton" data-toggle="tooltip" data-placement="right" title="Delete" data-id="${id}" data-name="${nome}">
                     <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>

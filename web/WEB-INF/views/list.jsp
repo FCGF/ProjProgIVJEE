@@ -57,7 +57,14 @@
                                 <c:forEach var="fields" items="${objects}">
                                     <tr>
                                         <c:forEach var="field" items="${fields}">
-                                            <td><c:out value="${field.getValue()}"/></td>
+                                            <c:choose>
+                                                <c:when test="${field.isCombo()}">
+                                                    <td><c:out value="${field.getValue().getNome()}"/></td>
+                                                </c:when>
+                                                <c:when test="${not field.isCombo()}">
+                                                    <td><c:out value="${field.getValue()}"/></td>
+                                                </c:when>
+                                            </c:choose>
                                             <c:choose>
                                                 <c:when test="${field.getName() == 'Id'}">
                                                     <c:set var="id" scope="page" value="${field.getValue()}"/>

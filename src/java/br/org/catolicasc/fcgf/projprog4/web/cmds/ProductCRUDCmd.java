@@ -49,11 +49,11 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
         List<List<FieldData<Category>>> objects = new ArrayList<>();
         products.stream().map((p) -> {
             List<FieldData<Category>> fields = new ArrayList<>(8);
-            fields.add(new FieldData<>(ID, p.getId(), false, null, Type.NUMBER));
+            fields.add(new FieldData<>(ID, p.getId(), false, null, Type.ID));
             fields.add(new FieldData<>(NOME, p.getNome(), false, null, Type.TEXT));
             fields.add(new FieldData<>(DESCRIPTION, p.getDescription(), false, null, Type.TEXT));
             fields.add(new FieldData<>(PRICE, p.getPrice(), false, null, Type.NUMBER));
-            fields.add(new FieldData<>(CATEGORY, p.getCategory().getNome(), true, null, Type.TEXT));
+            fields.add(new FieldData<>(CATEGORY, p.getCategory(), true, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
             objects.add(fields);
@@ -108,42 +108,16 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
     }
 
     public String detail(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setCmdName(request);
-
-        final String receivedId = request.getParameter(ID);
-        final String link;
-
-        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
-            request.setAttribute(ERROR, "Id not received.");
-            link = list(request, response);
-        } else {
-            Long id = Long.parseLong(receivedId);
-            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
-            ProductDAO dao = new ProductDAO(factory);
-            Product product = dao.findProduct(id);
-
-            if (product == null) {
-                request.setAttribute(ERROR, "Product not found.");
-                link = list(request, response);
-            } else {
-                List<FieldData<Category>> fields = new ArrayList<>(8);
-                fields.add(new FieldData<>(ID, product.getId(), false, null, Type.NUMBER));
-                fields.add(new FieldData<>(NOME, product.getNome(), false, null, Type.TEXT));
-                fields.add(new FieldData<>(DESCRIPTION, product.getDescription(), false, null, Type.TEXT));
-                fields.add(new FieldData<>(PRICE, product.getPrice(), false, null, Type.NUMBER));
-                fields.add(new FieldData<>(CATEGORY, product.getCategory().getNome(), true, null, Type.TEXT));
-
-                request.setAttribute(FIELDS, fields);
-                request.setAttribute(NAME, "Product");
-
-                link = DETAIL_PATH;
-            }
-        }
-
-        return link;
+        return detailOrUpdate(request, response, false);
     }
 
+    //Para criar a view de Update
     public String update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        return detailOrUpdate(request, response, true);
+    }
+
+    //Para fazer o update e voltar a view de List
+    public String editAndList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         setCmdName(request);
         return list(request, response);
     }
@@ -201,5 +175,43 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
     private void setName(HttpServletRequest request) {
         request.setAttribute(NAME, "Products");
+    }
+
+    private String detailOrUpdate(HttpServletRequest request, HttpServletResponse response, boolean update) throws ServletException, IOException {
+        setCmdName(request);
+
+        final String receivedId = request.getParameter(ID);
+        final String link;
+
+        if (receivedId == null || receivedId.isEmpty() || !ParseHelper.tryParseLong(receivedId)) {
+            request.setAttribute(ERROR, "Id not received.");
+            link = list(request, response);
+        } else {
+            Long id = Long.parseLong(receivedId);
+            EntityManagerFactory factory = EntityManagerFactoryManager.getEntityManagerFactory();
+            ProductDAO productDao = new ProductDAO(factory);
+            Product product = productDao.findProduct(id);
+
+            if (product == null) {
+                request.setAttribute(ERROR, "Product not found.");
+                link = list(request, response);
+            } else {
+                List<Category> categories = update ? new CategoryDAO(factory).findAll() : null;
+
+                List<FieldData<Category>> fields = new ArrayList<>(8);
+                fields.add(new FieldData<>(ID, product.getId(), false, null, Type.ID));
+                fields.add(new FieldData<>(NOME, product.getNome(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(DESCRIPTION, product.getDescription(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(PRICE, product.getPrice(), false, null, Type.NUMBER));
+                fields.add(new FieldData<>(CATEGORY, product.getCategory(), true, categories, Type.TEXT));
+
+                request.setAttribute(FIELDS, fields);
+                request.setAttribute(NAME, "Product");
+
+                link = update ? UPDATE_PATH : DETAIL_PATH;
+            }
+        }
+
+        return link;
     }
 }

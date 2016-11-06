@@ -6,6 +6,7 @@ package br.org.catolicasc.fcgf.projprog4.web.helpers;
  */
 public enum Type {
 
+    ID("ID"),
     TEXT("TEXT"),
     NUMBER("NUMBER"),
     PASSWORD("PASSWORD");
