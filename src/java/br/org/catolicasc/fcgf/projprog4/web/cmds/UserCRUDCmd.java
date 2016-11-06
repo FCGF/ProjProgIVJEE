@@ -101,6 +101,8 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
         userDao.create(user);
 
+        request.setAttribute(MESSAGE, "User created successfully.");
+
         return list(request, response);
     }
 
@@ -130,7 +132,7 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 fields.put(RULE, user.getRule().getNome());
 
                 request.setAttribute(FIELDS, fields);
-                setName(request);
+                request.setAttribute(NAME, "User");
 
                 link = DETAIL_PATH;
             }

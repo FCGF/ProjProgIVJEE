@@ -17,16 +17,17 @@
         <!-- HEADER -->
         <%@include file="/WEB-INF/jspf/header.jspf"%>
         <div id="main" class="container-fluid">
-            <div class="row col-md-10 col-md-offset-1">
-                <h2>${name}</h2>
+            <div class="row col-md-6 col-md-offset-3">
+                <h2>${name} Details</h2>
+                <hr/>
             </div>
             <c:forEach var="field" items="${fields.entrySet()}">
-                <div class="row col-md-10 col-md-offset-1">
-                    <h3><c:out value="${field.getKey()}"/>: <c:out value="${field.getValue()}"/></h3>
+                <div class="row col-md-6 col-md-offset-3">
+                    <h4><b><c:out value="${field.getKey()}"/>:</b></h4> <p><c:out value="${field.getValue()}"/></p>
                 </div>
             </c:forEach>
-            <div class="row col-md-10 col-md-offset-1 pull-left">
-                <a href="#" class="btn btn-success listButton" title="List" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
+            <div class="row col-md-12 text-center">
+                <a href="#" class="btn btn-success listButton" title="List" >
                     <span class="glyphicon glyphicon-list" aria-hidden="true"></a>
 
                 <a href="#" class="btn btn-primary editButton" title="Edit" data-id="${fields.get("Id")}" data-name="${fields.get("Nome")}">
@@ -36,12 +37,12 @@
                     <span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></a>
             </div>
         </div
-        
-        <!--Link: prog4/mvc?cmd=${cmd}&mtd=${mtd}-->
-        
+
+<!--Link: prog4/mvc?cmd=${cmd}&mtd=${mtd}-->
+
         <!-- FOOTER -->  
         <%@include file="/WEB-INF/jspf/footer.jspf"%>
 
-        
+
     </body>
 </html>

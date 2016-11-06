@@ -102,6 +102,8 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
         productDao.create(product);
 
+        request.setAttribute(MESSAGE, "Product created successfully.");
+
         return list(request, response);
     }
 
@@ -132,7 +134,7 @@ public class ProductCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 fields.put(CATEGORY, product.getCategory().getNome());
 
                 request.setAttribute(FIELDS, fields);
-                setName(request);
+                request.setAttribute(NAME, "Product");
 
                 link = DETAIL_PATH;
             }

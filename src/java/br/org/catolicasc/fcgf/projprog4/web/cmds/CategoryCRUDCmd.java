@@ -66,7 +66,7 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
         request.setAttribute(FIELDS, fields);
         setName(request);
-        
+
         return CREATE_PATH;
     }
 
@@ -82,6 +82,8 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
         Category category = new Category(name);
 
         categoryDao.create(category);
+
+        request.setAttribute(MESSAGE, "Category created successfully.");
 
         return list(request, response);
     }
@@ -110,7 +112,7 @@ public class CategoryCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 fields.put(NOME, category.getNome());
 
                 request.setAttribute(FIELDS, fields);
-                setName(request);
+                request.setAttribute(NAME, "Category");
 
                 link = DETAIL_PATH;
             }

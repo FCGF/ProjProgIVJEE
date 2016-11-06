@@ -83,6 +83,8 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
         ruleDao.create(rule);
 
+        request.setAttribute(MESSAGE, "Rule created successfully.");
+
         return list(request, response);
     }
 
@@ -110,7 +112,7 @@ public class RuleCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 fields.put(NOME, rule.getNome());
 
                 request.setAttribute(FIELDS, fields);
-                setName(request);
+                request.setAttribute(NAME, "Rule");
 
                 link = DETAIL_PATH;
             }

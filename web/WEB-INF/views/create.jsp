@@ -6,6 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html>
@@ -30,17 +31,46 @@
 
                             <c:choose>
                                 <c:when test="${empty field.getValue()}">
-
-                                    <input type="text" 
-                                           class="form-control" 
-                                           id="<c:out value="${field.getKey()}"/>" 
-                                           name="<c:out value="${field.getKey()}"/>" 
-                                           required="required" 
-                                           placeholder="Inform the <c:out value="${field.getKey()}"/>" 
-                                           maxlength="100"
-                                           data-property="<c:out value="${field.getKey()}"/>">
-                                    <span id="<c:out value="${field.getKey()}"/>Count" 
-                                          class="label label-warning">100 left!</span>
+                                    
+                                    <c:choose>
+                                        <c:when test="${fn:startsWith(field.getKey(), 'Price')}">
+                                            <input type="number" 
+                                                   min="0"
+                                                   class="form-control" 
+                                                   id="<c:out value="${field.getKey()}"/>" 
+                                                   name="<c:out value="${field.getKey()}"/>" 
+                                                   required="required" 
+                                                   placeholder="Inform the <c:out value="${field.getKey()}"/>" 
+                                                   maxlength="100"
+                                                   data-property="<c:out value="${field.getKey()}"/>">
+                                            <span id="<c:out value="${field.getKey()}"/>Count" 
+                                                  class="label label-warning">100 left!</span>
+                                        </c:when>
+                                        <c:when test="${fn:startsWith(field.getKey(), 'Password')}">
+                                            <input type="password" 
+                                                   class="form-control" 
+                                                   id="<c:out value="${field.getKey()}"/>" 
+                                                   name="<c:out value="${field.getKey()}"/>" 
+                                                   required="required" 
+                                                   placeholder="Inform the <c:out value="${field.getKey()}"/>" 
+                                                   maxlength="100"
+                                                   data-property="<c:out value="${field.getKey()}"/>">
+                                            <span id="<c:out value="${field.getKey()}"/>Count" 
+                                                  class="label label-warning">100 left!</span>
+                                        </c:when>
+                                        <c:when test="${not fn:startsWith(field.getKey(), 'Price') and not fn:startsWith(field.getKey(), 'Password')}">
+                                            <input type="text" 
+                                                   class="form-control" 
+                                                   id="<c:out value="${field.getKey()}"/>" 
+                                                   name="<c:out value="${field.getKey()}"/>" 
+                                                   required="required" 
+                                                   placeholder="Inform the <c:out value="${field.getKey()}"/>" 
+                                                   maxlength="100"
+                                                   data-property="<c:out value="${field.getKey()}"/>">
+                                            <span id="<c:out value="${field.getKey()}"/>Count" 
+                                                  class="label label-warning">100 left!</span>
+                                        </c:when>
+                                    </c:choose>
 
                                 </c:when>
                                 <c:when test="${not empty field.getValue()}">
