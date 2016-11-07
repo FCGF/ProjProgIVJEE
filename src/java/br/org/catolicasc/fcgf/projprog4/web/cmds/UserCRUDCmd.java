@@ -51,7 +51,7 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
             List<FieldData<Rule>> fields = new ArrayList<>(6);
             fields.add(new FieldData<>(ID, u.getId(), false, null, Type.ID));
             fields.add(new FieldData<>(NOME, u.getNome(), false, null, Type.TEXT));
-            fields.add(new FieldData<>(EMAIL, u.getEmail(), false, null, Type.TEXT));
+            fields.add(new FieldData<>(EMAIL, u.getEmail(), false, null, Type.EMAIL));
             fields.add(new FieldData<>(RULE, u.getRule(), true, null, Type.TEXT));
             return fields;
         }).forEach((fields) -> {
@@ -73,7 +73,7 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
 
         List<FieldData<Rule>> fields = new ArrayList<>(6);
         fields.add(new FieldData<>(NOME, null, false, null, Type.TEXT));
-        fields.add(new FieldData<>(EMAIL, null, false, null, Type.TEXT));
+        fields.add(new FieldData<>(EMAIL, null, false, null, Type.EMAIL));
         fields.add(new FieldData<>(PASSWORD, null, false, null, Type.PASSWORD));
         fields.add(new FieldData<>(RULE, null, true, ruleDao.findAll(), Type.TEXT));
 
@@ -238,7 +238,7 @@ public class UserCRUDCmd extends AbstractWebCmd implements IWebCmd {
                 List<FieldData<Rule>> fields = new ArrayList<>(6);
                 fields.add(new FieldData<>(ID, user.getId(), false, null, Type.ID));
                 fields.add(new FieldData<>(NOME, user.getNome(), false, null, Type.TEXT));
-                fields.add(new FieldData<>(EMAIL, user.getEmail(), false, null, Type.TEXT));
+                fields.add(new FieldData<>(EMAIL, user.getEmail(), false, null, Type.EMAIL));
                 fields.add(new FieldData<>(PASSWORD, user.getSenha(), false, null, Type.PASSWORD));
                 fields.add(new FieldData<>(RULE, user.getRule(), true, rules, Type.TEXT));
 

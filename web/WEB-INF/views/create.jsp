@@ -85,7 +85,18 @@
                                             <span id="<c:out value="${field.getName()}"/>Count" 
                                                   class="label label-warning">100 left!</span>
                                         </c:when>
-
+                                        <c:when test="${field.getType() == 'EMAIL'}">
+                                            <input type="email" 
+                                                   class="form-control" 
+                                                   id="<c:out value="${field.getName()}"/>" 
+                                                   name="<c:out value="${field.getName()}"/>" 
+                                                   required="required" 
+                                                   placeholder="Inform the <c:out value="${field.getName()}"/>" 
+                                                   maxlength="100"
+                                                   data-property="<c:out value="${field.getName()}"/>">
+                                            <span id="<c:out value="${field.getName()}"/>Count" 
+                                                  class="label label-warning">100 left!</span>
+                                        </c:when>
                                     </c:choose>
 
                                 </c:when>

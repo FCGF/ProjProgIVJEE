@@ -9,7 +9,8 @@ public enum Type {
     ID("ID"),
     TEXT("TEXT"),
     NUMBER("NUMBER"),
-    PASSWORD("PASSWORD");
+    PASSWORD("PASSWORD"),
+    EMAIL("EMAIL");
 
     private final String type;
 
